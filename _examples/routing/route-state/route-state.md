@@ -1,3 +1,13 @@
+# `route`路由状态设置
+## 目录结构
+> 主目录`route-state`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -48,3 +58,8 @@ func main() {
 
 	app.Run(iris.Addr(":8080"))
 }
+```
+
+## 介绍
+
+1. 设置路由状态可以跳过不需要调用的处理函数

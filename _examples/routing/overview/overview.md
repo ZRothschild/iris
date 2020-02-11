@@ -1,3 +1,16 @@
+# `route`路由用发回顾
+## 目录结构
+> 主目录`overview`
+```html
+    —— main.go
+    —— public
+        —— images
+            —— favicon.ico
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -163,7 +176,7 @@ func main() {
 
 func info(ctx iris.Context) {
 	// http方法请求服务器的资源。
-	method := ctx.Method() // the http method requested a server's resource.
+	method := ctx.Method()       // the http method requested a server's resource.
 	//子域（如果有）。
 	subdomain := ctx.Subdomain() // the subdomain, if any.
 	//请求路径（没有协议和host）。
@@ -180,3 +193,4 @@ func info(ctx iris.Context) {
 	ctx.Writef("\nInfo\n\n")
 	ctx.Writef("Method: %s\nSubdomain: %s\nPath: %s\nParameters length: %d", method, subdomain, path, paramsLen)
 }
+```

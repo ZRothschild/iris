@@ -1,3 +1,18 @@
+# `route` 自定义路由包装器
+## 目录结构
+> 主目录`custom-wrapper`
+```html 
+    ——public
+        —— css
+            —— main.css
+        —— app.js
+        —— index.html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -6,7 +21,6 @@ import (
 
 	"github.com/kataras/iris/v12"
 )
-
 //在此示例中，您只会看到.WrapRouter的一个用例。
 //您可以使用.WrapRouter来添加自定义逻辑，无论何时router不应该
 //执行以执行已注册路由的处理程序。
@@ -86,3 +100,99 @@ func main() {
 	// you may want to .WrapRouter or .Downgrade in order to bypass the iris' default router, i.e:
 	// you can use that method to setup custom proxies too.
 }
+```
+> `main_test.go`
+
+```go
+package main
+
+import (
+	"io/ioutil"
+	"path/filepath"
+	"strings"
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+type resource string
+
+func (r resource) String() string {
+	return string(r)
+}
+
+func (r resource) strip(strip string) string {
+	s := r.String()
+	return strings.TrimPrefix(s, strip)
+}
+
+func (r resource) loadFromBase(dir string) string {
+	filename := r.String()
+
+	if filename == "/" {
+		filename = "/index.html"
+	}
+
+	fullpath := filepath.Join(dir, filename)
+
+	b, err := ioutil.ReadFile(fullpath)
+	if err != nil {
+		panic(fullpath + " failed with error: " + err.Error())
+	}
+
+	return string(b)
+}
+
+var urls = []resource{
+	"/",
+	"/index.html",
+	"/app.js",
+	"/css/main.css",
+}
+
+func TestCustomWrapper(t *testing.T) {
+	app := newApp()
+	e := httptest.New(t, app)
+
+	for _, u := range urls {
+		url := u.String()
+		contents := u.loadFromBase("./public")
+
+		e.GET(url).Expect().
+			Status(httptest.StatusOK).
+			Body().Equal(contents)
+	}
+
+	e.GET("/other/something").Expect().Status(httptest.StatusOK)
+}
+```
+> `public/index.html`
+
+```html
+<html>
+
+<head>
+    <title>Index Page</title>
+</head>
+
+<body>
+    <h1> Hello from index.html </h1>
+
+
+    <script src="/app.js">  </script>
+</body>
+
+</html>
+```
+> `public/app.js`
+
+```js
+window.alert("app.js loaded from \"/");
+```
+> `public/css/main.css`
+
+```css
+body {
+    background-color: black;
+}
+```

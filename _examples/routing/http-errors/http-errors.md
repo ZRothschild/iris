@@ -1,3 +1,13 @@
+# `route` http 错误处理
+## 目录结构
+> 主目录`http-errors`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -136,7 +146,7 @@ func problemExample(ctx iris.Context) {
 		//一个可以动态设置的函数（如果已指定）
 		//根据请求重试。 对于ProblemOptions可重用性很有用。
 		//覆盖RetryAfter字段。
-
+		
 		// A function that, if specified, can dynamically set
 		// retry-after based on the request. Useful for ProblemOptions reusability.
 		// Overrides the RetryAfter field.
@@ -144,3 +154,5 @@ func problemExample(ctx iris.Context) {
 		// RetryAfterFunc: func(iris.Context) interface{} { [...] }
 	})
 }
+
+```

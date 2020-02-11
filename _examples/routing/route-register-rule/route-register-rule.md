@@ -1,3 +1,14 @@
+# `route`路由注册规则
+## 目录结构
+> 主目录`route-register-rule`
+```html
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import "github.com/kataras/iris/v12"
@@ -53,3 +64,31 @@ func getHandler(ctx iris.Context) {
 func anyHandler(ctx iris.Context) {
 	ctx.Writef("From %s", ctx.GetCurrentRoute().Trace())
 }
+```
+
+> `main_test.go`
+
+```go
+package main
+
+import (
+	"testing"
+
+	"github.com/kataras/iris/v12/core/router"
+	"github.com/kataras/iris/v12/httptest"
+)
+
+func TestRouteRegisterRuleExample(t *testing.T) {
+	app := newApp()
+	e := httptest.New(t, app)
+
+	for _, method := range router.AllMethods {
+		tt := e.Request(method, "/").Expect().Status(httptest.StatusOK).Body()
+		if method == "GET" {
+			tt.Equal("From [./main.go:28] GET: / -> github.com/kataras/iris/v12/_examples/routing/route-register-rule.getHandler()")
+		} else {
+			tt.Equal("From [./main.go:30] " + method + ": / -> github.com/kataras/iris/v12/_examples/routing/route-register-rule.anyHandler()")
+		}
+	}
+}
+```

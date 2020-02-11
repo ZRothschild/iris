@@ -1,3 +1,13 @@
+# `route` 全局路由函数注册
+## 目录结构
+> 主目录`globally`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import "github.com/kataras/iris/v12"
@@ -96,3 +106,8 @@ func contactHandler(ctx iris.Context) {
 	//执行通过`DoneGlobal`注册的"after"处理程序
 	ctx.Next() // execute the "after" handler registered via `DoneGlobal`.
 }
+```
+
+## 介绍
+
+1. 相当于构造函数与析构函数

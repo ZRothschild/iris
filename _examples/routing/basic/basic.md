@@ -1,3 +1,14 @@
+# `route`基础用法
+## 目录结构
+> 主目录`basic`
+```html
+    —— main.go
+    —— test_main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -21,7 +32,7 @@ func newApp() *iris.Application {
 	//
 	//第三个可变参数应该包含一个或多个路由处理函数，他们将被顺序执行
 	//例子如下:
-
+	
 	// GET -> HTTP Method
 	// / -> Path
 	// func(ctx iris.Context) -> The route's handler.
@@ -31,7 +42,7 @@ func newApp() *iris.Application {
 
 		// 可以参考 https://github.com/kataras/iris/wiki/Routing-context-methods
 		//详细介绍了所有 context 的所有可用方法不仅仅是 ctx.Path()
-
+		
 		// navigate to the https://github.com/kataras/iris/wiki/Routing-context-methods
 		// to overview all context's method.
 		ctx.HTML("Hello from " + ctx.Path()) // Hello from /
@@ -40,9 +51,9 @@ func newApp() *iris.Application {
 	app.Get("/home", func(ctx iris.Context) {
 		ctx.Writef(`Same as app.Handle("GET", "/", [...])`)
 	})
-
+	
 	//同一路径中的不同路径参数类型。
-
+	
 	// Different path parameters types in the same path.
 	app.Get("/u/{p:path}", func(ctx iris.Context) {
 		ctx.Writef(":string, :int, :uint, :alphabetical and :path in the same path pattern.")
@@ -83,7 +94,7 @@ func newApp() *iris.Application {
 		/u/-1 对应 :int (如果不写 :int 默认是 :string)
 		/u/abcd123 对应 :string
 	*/
-
+	
 	/*
 		/u/some/path/here maps to :path
 		/u/abcd maps to :alphabetical (if :alphabetical registered otherwise :string)
@@ -93,7 +104,7 @@ func newApp() *iris.Application {
 	*/
 
 	// Pssst，别忘了使用动态路径示例获得更意外惊喜
-
+	
 	// Pssst, don't forget dynamic-path example for more "magic"!
 	app.Get("/api/users/{userid:uint64 min(1)}", func(ctx iris.Context) {
 		userID, err := ctx.Params().GetUint64("userid")
@@ -124,14 +135,14 @@ func newApp() *iris.Application {
 	//您可以使用以下命令捕获任何路由创建错误：
 	//路线， err := app.Get(...)
 	//为路由设置名称：route.Name =“ myroute”
-
+	
 	// More than one route can contain the same path with a different http mapped method.
 	// You can catch any route creation errors with:
 	// route, err := app.Get(...)
 	// set a name to a route: route.Name = "myroute"
 
 	//您还可以按路径前缀对路由进行分组，共享中间件和完成的需要处理的动作。
-
+	
 	// You can also group routes by path prefix, sharing middleware(s) and done handlers.
 
 	adminRoutes := app.Party("/admin", adminMiddleware)
@@ -141,7 +152,7 @@ func newApp() *iris.Application {
 		ctx.Application().Logger().Infof("response sent to " + ctx.Path())
 	})
 	// adminRoutes.Layout("/views/layouts/admin.html")  // 为这些路由设置视图布局，请参view图示例。
-
+	
 	// adminRoutes.Layout("/views/layouts/admin.html") // set a view layout for these routes, see more at view examples.
 
 	// GET: http://localhost:8080/admin
@@ -150,7 +161,7 @@ func newApp() *iris.Application {
 		ctx.StatusCode(iris.StatusOK) // default is 200 == iris.StatusOK
 		ctx.HTML("<h1>Hello from admin/</h1>")
 
-		// 为了执行路由组的 Done" Handler(s) 所以必须调用 ctx.Next()
+		// 为了执行路由组的 Done" Handler(s) 所以必须调用 ctx.Next() 
 		ctx.Next() // in order to execute the party's "Done" Handler(s)
 	})
 
@@ -164,7 +175,7 @@ func newApp() *iris.Application {
 	})
 	// 子域名比上面更容易, 执行要在host localhost或127.0.0.1
 	// unix 路径在 /etc/hosts  windows 路径在 C:/windows/system32/drivers/etc/hosts
-
+	
 	// subdomains, easier than ever, should add localhost or 127.0.0.1 into your hosts file,
 	// etc/hosts on unix or C:/windows/system32/drivers/etc/hosts on windows.
 
@@ -173,9 +184,9 @@ func newApp() *iris.Application {
 	{ // braces are optional, it's just type of style, to group the routes visually.
 
 		// http://v1.localhost:8080
-
+		
 		//注意：对于版本特定的功能，请改用_examples /versioning。
-
+		
 		// Note: for versioning-specific features checkout the _examples/versioning instead.
 		v1.Get("/", func(ctx iris.Context) {
 			ctx.HTML(`Version 1 API. go to <a href="/api/users">/api/users</a>`)
@@ -255,3 +266,96 @@ func notFoundHandler(ctx iris.Context) {
 // if you didn't catch the second return value(error) on .Handle/.Get....
 
 // See "file-server/single-page-application" to see how another feature, "WrapRouter", works.
+```
+> `main_test.go`
+
+```go
+package main
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+// Shows a very basic usage of the httptest.
+// The tests are written in a way to be easy to understand,
+// for a more comprehensive testing examples check out the:
+// _examples/routing/main_test.go,
+// _examples/subdomains/www/main_test.go
+// _examples/file-server and e.t.c.
+// Almost every example which covers
+// a new feature from you to learn
+// contains a test file as well.
+func TestRoutingBasic(t *testing.T) {
+	expectedUResponse := func(paramName, paramType, paramValue string) string {
+		s := fmt.Sprintf("before %s (%s), current route name: GET/u/{%s:%s}\n", paramName, paramType, paramName, paramType)
+		s += fmt.Sprintf("%s (%s): %s", paramName, paramType, paramValue)
+		return s
+	}
+
+	var (
+		expectedNotFoundResponse = "Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>."
+
+		expectedIndexResponse = "Hello from /"
+		expectedHomeResponse  = `Same as app.Handle("GET", "/", [...])`
+
+		expectedUpathResponse         = ":string, :int, :uint, :alphabetical and :path in the same path pattern."
+		expectedUStringResponse       = expectedUResponse("username", "string", "abcd123")
+		expectedUIntResponse          = expectedUResponse("id", "int", "-1")
+		expectedUUintResponse         = expectedUResponse("uid", "uint", "42")
+		expectedUAlphabeticalResponse = expectedUResponse("firstname", "alphabetical", "abcd")
+
+		expectedAPIUsersIndexResponse = map[string]interface{}{"user_id": 42}
+
+		expectedAdminIndexResponse = "<h1>Hello from admin/</h1>"
+
+		expectedSubdomainV1IndexResponse                  = `Version 1 API. go to <a href="/api/users">/api/users</a>`
+		expectedSubdomainV1APIUsersIndexResponse          = "All users"
+		expectedSubdomainV1APIUsersIndexWithParamResponse = "user with id: 42"
+
+		expectedSubdomainWildcardIndexResponse = "Subdomain can be anything, now you're here from: any-subdomain-here"
+	)
+
+	app := newApp()
+	e := httptest.New(t, app)
+
+	e.GET("/anotfound").Expect().Status(httptest.StatusNotFound).
+		Body().Equal(expectedNotFoundResponse)
+
+	e.GET("/").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedIndexResponse)
+	e.GET("/home").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedHomeResponse)
+
+	e.GET("/u/some/path/here").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedUpathResponse)
+	e.GET("/u/abcd123").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedUStringResponse)
+	e.GET("/u/-1").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedUIntResponse)
+	e.GET("/u/42").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedUUintResponse)
+	e.GET("/u/abcd").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedUAlphabeticalResponse)
+
+	e.GET("/api/users/42").Expect().Status(httptest.StatusOK).
+		JSON().Equal(expectedAPIUsersIndexResponse)
+
+	e.GET("/admin").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedAdminIndexResponse)
+
+	e.Request("GET", "/").WithURL("http://v1.example.com").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedSubdomainV1IndexResponse)
+
+	e.Request("GET", "/api/users").WithURL("http://v1.example.com").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedSubdomainV1APIUsersIndexResponse)
+
+	e.Request("GET", "/api/users/42").WithURL("http://v1.example.com").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedSubdomainV1APIUsersIndexWithParamResponse)
+
+	e.Request("GET", "/").WithURL("http://any-subdomain-here.example.com").Expect().Status(httptest.StatusOK).
+		Body().Equal(expectedSubdomainWildcardIndexResponse)
+}
+```

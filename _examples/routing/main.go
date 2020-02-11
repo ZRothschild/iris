@@ -5,6 +5,12 @@ import (
 )
 
 /*
+读：
+"overview"
+"basic"
+"dynamic-path"
+and "reverse"示例，如果你想能更好的使用iris
+
 Read:
 "overview"
 "basic"
@@ -16,6 +22,8 @@ const maxBodySize = 1 << 20
 const notFoundHTML = "<h1> custom http error page </h1>"
 
 func registerErrors(app *iris.Application) {
+	//设置自定义404处理程序
+
 	// set a custom 404 handler
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
 		ctx.HTML(notFoundHTML)
@@ -27,10 +35,14 @@ func registerGamesRoutes(app *iris.Application) {
 		ctx.Next()
 	}
 
+	// party只是一组具有相同前缀的路由
+	//和中间件，即："/games"和gamesMiddleware。
+
 	// party is just a group of routes with the same prefix
 	// and middleware, i.e: "/games" and gamesMiddleware.
 	games := app.Party("/games", gamesMiddleware)
-	{ // braces are optional of course, it's just a style of code
+	{ //花括号当然是可选的，这只是一种代码样式
+		// braces are optional of course, it's just a style of code
 
 		// "GET" method
 		games.Get("/{gameID:uint64}/clans", h)
@@ -40,6 +52,7 @@ func registerGamesRoutes(app *iris.Application) {
 		// "PUT" method
 		games.Put("/{gameID:uint64}/players/{clanPublicID:uint64}", h)
 		games.Put("/{gameID:uint64}/clans/clan/{clanPublicID:uint64}", h)
+		//切记："clanPublicID" 不应更改为具有相同前缀的其他路由。
 		// remember: "clanPublicID" should not be changed to other routes with the same prefix.
 		// "POST" method
 		games.Post("/{gameID:uint64}/clans", h)
@@ -99,14 +112,24 @@ func newApp() *iris.Application {
 
 	app.Handle("GET", "/healthcheck", h)
 
+	//“ POST”方法
+	//此处理程序从客户端/请求读取原始正文
+	//并发送回相同的正文
+	//记住，我们对那个正文有限制
+	//保护自己免受“过热”的影响。
+
 	// "POST" method
 	// this handler reads raw body from the client/request
 	// and sends back the same body
 	// remember, we have limit to that body in order
 	// to protect ourselves from "over heating".
 	app.Post("/", iris.LimitRequestBodySize(maxBodySize), func(ctx iris.Context) {
+		//获取请求主体
+
 		// get request body
 		b, err := ctx.GetBody()
+		//如果较大，则发送错误的请求状态
+
 		// if is larger then send a bad request status
 		if err != nil {
 			ctx.StatusCode(iris.StatusBadRequest)
@@ -127,11 +150,17 @@ func newApp() *iris.Application {
 }
 
 func h(ctx iris.Context) {
-	method := ctx.Method()       // the http method requested a server's resource.
+	// http方法请求服务器的资源
+	method := ctx.Method() // the http method requested a server's resource.
+	//子域（如果有）
 	subdomain := ctx.Subdomain() // the subdomain, if any.
+
+	//请求路径（没有请求协议和主机）。
 
 	// the request path (without scheme and host).
 	path := ctx.Path()
+	//如果不知道如何获取所有参数 名字：
+
 	// how to get all parameters, if we don't know
 	// the names:
 	paramsLen := ctx.Params().Len()
@@ -174,6 +203,7 @@ func main() {
 		http://localhost:8080/games/42/clans/93/memberships/promote
 		http://localhost:8080/games/42/clans/93/memberships/demote
 
+		//未找到触发
 		// FIRE NOT FOUND
 		http://localhost:8080/coudlntfound
 	*/

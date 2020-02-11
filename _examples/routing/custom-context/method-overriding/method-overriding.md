@@ -1,3 +1,15 @@
+# `route`自定义上下文 重写上下文
+## 目录结构
+> 主目录`method-overriding`
+```html
+    —— view
+        —— hi.html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 //在这个包中，我将向您展示如何覆盖现有Context的函数和方法。
@@ -16,7 +28,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 )
-
 //创建您自己的自定义上下文，放入您需要的任何字段。
 
 // Create your own custom Context, put any fields you wanna need.
@@ -122,3 +133,10 @@ func recordWhichContextJustForProofOfConcept(ctx iris.Context) {
 //查看"new-implementation"，以了解如何创建具有新功能的全新Context。
 
 // Look "new-implementation" to see how you can create an entirely new Context with new functions.
+```
+
+> `view/hi.html`
+
+```html
+<h1> Hi {{.firstname}} </h1>
+```

@@ -1,3 +1,14 @@
+# `route`条件链操作
+## 目录结构
+> 主目录`conditional-chain`
+```html
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -70,3 +81,25 @@ func main() {
 	// http://localhost:8080/api/v1/users?admin=true
 	app.Run(iris.Addr(":8080"))
 }
+```
+> `main_test.go`
+
+```go
+package main
+
+import (
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+func TestNewConditionalHandler(t *testing.T) {
+	app := newApp()
+	e := httptest.New(t, app)
+
+	e.GET("/api/v1/users").Expect().Status(httptest.StatusOK).
+		Body().Equal("requested: <b>/api/v1/users</b>")
+	e.GET("/api/v1/users").WithQuery("admin", "true").Expect().Status(httptest.StatusOK).
+		Body().Equal("<title>Admin</title>\n<h1>Hello Admin</h1><br>requested: <b>/api/v1/users</b>")
+}
+```

@@ -1,3 +1,13 @@
+# `route`路由前后置处理程序设置
+## 目录结构
+> 主目录`per-route`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import "github.com/kataras/iris/v12"
@@ -82,3 +92,4 @@ func mainHandler(ctx iris.Context) {
 	//执行"after".
 	ctx.Next() // execute the "after".
 }
+```

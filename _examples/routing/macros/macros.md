@@ -1,3 +1,13 @@
+# `route` 路由宏的使用
+## 目录结构
+> 主目录`macros`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 // Package main展示了如何注册自定义参数类型和所属的宏函数。
 // Package main shows how you can register a custom parameter type and macro functions that belongs to it.
 package main
@@ -83,7 +93,7 @@ func main() {
 	app.Get("/test_slice_contains/{myparam:slice contains([value1,value2])}", func(ctx iris.Context) {
 		//如果没有内置函数可用于以所需类型检索值，例如ctx.Params().GetInt
 		//然后，您可以使用`GetEntry.ValueRaw`获取实际值，该值由上面的宏设置。
-
+		
 		// When it is not a builtin function available to retrieve your value with the type you want, such as ctx.Params().GetInt
 		// then you can use the `GetEntry.ValueRaw` to get the real value, which is set-ed by your macro above.
 		myparam := ctx.Params().GetEntry("myparam").ValueRaw.([]string)
@@ -92,3 +102,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"))
 }
+```

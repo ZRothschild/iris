@@ -1,3 +1,14 @@
+# `route`自定义上下文 新加字段
+## 目录结构
+> 主目录`new-implementation`
+```html
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -6,7 +17,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 )
-
 //Owner是我们的应用程序结构，其中包含我们需要的方法或字段，
 //将其视为*Context的所有者。
 
@@ -20,14 +30,12 @@ type Owner struct {
 	// and shared to all clients.
 	sessionsManager *sessions.Sessions
 }
-
 //此包级变量“应用程序”将在上下文中用于与我们的全局应用程序进行通信。
 
 // this package-level variable "application" will be used inside context to communicate with our global Application.
 var owner = &Owner{
 	sessionsManager: sessions.New(sessions.Config{Cookie: "mysessioncookie"}),
 }
-
 //上下文是我们的自定义上下文。
 //让我们实现一个上下文，该上下文将使我们能够访问
 //通过一个简单的`ctx.Session()`调用到客户端的Session。
@@ -39,7 +47,6 @@ type Context struct {
 	iris.Context
 	session *sessions.Session
 }
-
 //会话返回当前客户端的会话。
 // Session returns the current client's session.
 func (ctx *Context) Session() *sessions.Session {
@@ -53,7 +60,6 @@ func (ctx *Context) Session() *sessions.Session {
 
 	return ctx.session
 }
-
 //粗体会向客户端发送粗体文本。
 // Bold will send a bold text to the client.
 func (ctx *Context) Bold(text string) {
@@ -69,7 +75,7 @@ func acquire(original iris.Context) *Context {
 	//将上下文设置为原始上下文，以便可以访问iris的实现。
 	ctx.Context = original // set the context to the original one in order to have access to iris's implementation.
 	//重置会话
-	ctx.session = nil // reset the session
+	ctx.session = nil      // reset the session
 	return ctx
 }
 
@@ -96,7 +102,7 @@ func newApp() *iris.Application {
 	//像以前一样工作，唯一的不同
 	//是原始context.Handler应该用我们的自定义包装
 	//`Handler`函数。
-
+	
 	// Work as you did before, the only difference
 	// is that the original context.Handler should be wrapped with our custom
 	// `Handler` function.
@@ -126,3 +132,35 @@ func main() {
 	// GET: http://localhost:8080/get
 	app.Run(iris.Addr(":8080"))
 }
+```
+
+> `main_test.go`
+
+```go
+package main
+
+import (
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+func TestCustomContextNewImpl(t *testing.T) {
+	app := newApp()
+	e := httptest.New(t, app, httptest.URL("http://localhost:8080"))
+
+	e.GET("/").Expect().
+		Status(httptest.StatusOK).
+		ContentType("text/html").
+		Body().Equal("<b>Hello from our *Context</b>")
+
+	expectedName := "iris"
+	e.POST("/set").WithFormField("name", expectedName).Expect().
+		Status(httptest.StatusOK).
+		Body().Equal("set session = " + expectedName)
+
+	e.GET("/get").Expect().
+		Status(httptest.StatusOK).
+		Body().Equal(expectedName)
+}
+```

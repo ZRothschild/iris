@@ -1,3 +1,13 @@
+# `route`路由转换
+## 目录结构
+> 主目录`reverse`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -46,3 +56,8 @@ func main() {
 	// using the reverse router component and the {{url}} and {{urlpath}} template functions.
 	app.Run(iris.Addr(":8080"))
 }
+```
+
+### 介绍
+
+1. 相当于执行当前路由，再去指定执行一个路由类似go to

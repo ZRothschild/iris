@@ -1,3 +1,13 @@
+# `route` 自定高等级的 router
+## 目录结构
+> 主目录`custom-high-level-router`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -45,7 +55,6 @@ type customRouter struct {
 	// or just expect the whole routes provider:
 	provider router.RoutesProvider
 }
-
 // HandleRequest一个愚蠢的示例，该示例仅基于请求路径的第一部分来查找路由
 //它也必须是静态的，其余的将填充参数。
 
@@ -125,7 +134,7 @@ func main() {
 	//
 	//要了解如何在没有直接Iris上下文支持的情况下构建更底层的内容（您也可以手动执行此操作）
 	//可以参考"custom-wrapper"示例。
-
+	
 	// To replace the existing router with a customized one by using the iris/context.Context
 	// you have to use the `app.BuildRouter` method before `app.Run` and after the routes registered.
 	// You should pass your custom router's instance as the second input arg, which must completes the `router#RequestHandler`
@@ -138,3 +147,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }
+```
