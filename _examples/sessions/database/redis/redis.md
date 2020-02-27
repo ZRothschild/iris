@@ -1,38 +1,78 @@
+# `seesion`会话redis存储
+## 目录结构
+> 主目录`redis`
+```html
+    —— main.go
+
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
 	"errors"
-	"os"
 	"time"
 
 	"github.com/kataras/iris/v12"
 
 	"github.com/kataras/iris/v12/sessions"
-	"github.com/kataras/iris/v12/sessions/sessiondb/boltdb"
+	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
 )
 
+// tested with redis version 3.0.503.
+// for windows see: https://github.com/ServiceStack/redis-windows
 func main() {
-	db, err := boltdb.New("./sessions.db", os.FileMode(0750))
-	if err != nil {
-		panic(err)
-	}
-	//当按下control+C/cmd + C时关闭并解锁数据库
+	//这些是默认值，
+	//您可以根据你自己正在运行的Redis服务器设置替换它们：
 
-	// close and unlobkc the database when control+C/cmd+C pressed
+	// These are the default values,
+	// you can replace them based on your running redis' server settings:
+	db := redis.New(redis.Config{
+		Network:   "tcp",
+		Addr:      "127.0.0.1:6379",
+		Timeout:   time.Duration(30) * time.Second,
+		MaxActive: 10,
+		Password:  "",
+		Database:  "",
+		Prefix:    "",
+		Delim:     "-",
+		Driver:    redis.Redigo(), // redis.Radix() can be used instead. // 可以用redis.Radix() 代替
+	})
+
+	//（可选）配置下划线驱动程序：
+	// driver := redis.Redigo()
+	// driver.MaxIdle = ...
+	// driver.IdleTimeout = ...
+	// driver.Wait = ...
+	// redis.Config {Driver: driver}
+
+	// Optionally configure the underline driver:
+	// driver := redis.Redigo()
+	// driver.MaxIdle = ...
+	// driver.IdleTimeout = ...
+	// driver.Wait = ...
+	// redis.Config {Driver: driver}
+
+	//当control + C / cmd + C时关闭连接
+
+	// Close connection when control+C/cmd+C
 	iris.RegisterOnInterrupt(func() {
 		db.Close()
 	})
 	//如果应用程序出错，则关闭并解锁数据库
-	defer db.Close() // close and unlock the database if application errored.
+	defer db.Close() // close the database connection if application errored.
 
 	sess := sessions.New(sessions.Config{
 		Cookie:       "sessionscookieid",
-		Expires:      45 * time.Minute, // <=0 means unlimited life. Defaults to 0. 小于等于0代表没有时间限制，默认是零
+		//默认值为0：表示无过期时间。 另一个不错的值是：45 * time.Minute，
+		Expires:      0, // defaults to 0: unlimited life. Another good value is: 45 * time.Minute,
 		AllowReclaim: true,
 	})
 
 	//
-	// 重要：
+	// 重要
 	// IMPORTANT:
 	//
 	sess.UseDatabase(db)
@@ -40,6 +80,7 @@ func main() {
 
 	// the rest of the code stays the same.
 	app := iris.New()
+	// app.Logger().SetLevel("debug")
 
 	app.Get("/", func(ctx iris.Context) {
 		ctx.Writef("You should navigate to the /set, /get, /delete, /clear,/destroy instead")
@@ -50,7 +91,7 @@ func main() {
 
 		// set session values
 		s.Set("name", "iris")
-		//测试是否在这里设置
+
 		// test if set here
 		ctx.Writef("All ok session value of the 'name' is: %s", s.GetString("name"))
 	})
@@ -66,6 +107,28 @@ func main() {
 
 		// test if set here
 		ctx.Writef("All ok session value of the '%s' is: %s", key, s.GetString(key))
+	})
+
+	app.Get("/set/int/{key}/{value}", func(ctx iris.Context) {
+		key := ctx.Params().Get("key")
+		value, _ := ctx.Params().GetInt("value")
+		s := sess.Start(ctx)
+		//设置会话值
+
+		// set session values
+		s.Set(key, value)
+		valueSet := s.Get(key)
+		//测试是否在这里设置
+
+		// test if set here
+		ctx.Writef("All ok session value of the '%s' is: %v", key, valueSet)
+	})
+
+	app.Get("/get/{key}", func(ctx iris.Context) {
+		key := ctx.Params().Get("key")
+		value := sess.Start(ctx).Get(key)
+
+		ctx.Writef("The '%s' on the /set was: %v", key, value)
 	})
 
 	app.Get("/get", func(ctx iris.Context) {
@@ -102,14 +165,14 @@ func main() {
 
 	app.Get("/destroy", func(ctx iris.Context) {
 		//销毁，删除整个会话数据和cookie
-
+		
 		// destroy, removes the entire session data and cookie
 		sess.Destroy(ctx)
 	})
 
 	app.Get("/update", func(ctx iris.Context) {
 		//更新会根据会话的“Expires”字段重置过期时间
-
+		
 		// updates resets the expiration based on the session's `Expires` field.
 		if err := sess.ShiftExpiration(ctx); err != nil {
 			if errors.Is(err, sessions.ErrNotFound) {
@@ -127,3 +190,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }
+```

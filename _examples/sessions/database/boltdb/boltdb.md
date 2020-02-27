@@ -1,3 +1,14 @@
+# `seesion`会话
+## 目录结构
+> 主目录`boltdb`
+```html
+    —— main.go
+
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -59,7 +70,7 @@ func main() {
 		key, value := ctx.Params().Get("key"), ctx.Params().Get("value")
 		s := sess.Start(ctx)
 		//设置会话值
-
+		
 		// set session values
 		s.Set(key, value)
 		//测试是否在这里设置
@@ -70,7 +81,7 @@ func main() {
 
 	app.Get("/get", func(ctx iris.Context) {
 		//以字符串的形式获取特定键，如果找不到，则仅返回一个空字符串
-
+		
 		// get a specific key, as string, if no found returns just an empty string
 		name := sess.Start(ctx).GetString("name")
 
@@ -79,7 +90,7 @@ func main() {
 
 	app.Get("/get/{key}", func(ctx iris.Context) {
 		//以字符串的形式获取特定键，如果找不到，则仅返回一个空字符串
-
+		
 		// get a specific key, as string, if no found returns just an empty string
 		name := sess.Start(ctx).GetString(ctx.Params().Get("key"))
 
@@ -88,28 +99,28 @@ func main() {
 
 	app.Get("/delete", func(ctx iris.Context) {
 		//删除特定的key
-
+		
 		// delete a specific key
 		sess.Start(ctx).Delete("name")
 	})
 
 	app.Get("/clear", func(ctx iris.Context) {
 		//删除所有key
-
+		
 		// removes all entries
 		sess.Start(ctx).Clear()
 	})
 
 	app.Get("/destroy", func(ctx iris.Context) {
 		//销毁，删除整个会话数据和cookie
-
+		
 		// destroy, removes the entire session data and cookie
 		sess.Destroy(ctx)
 	})
 
 	app.Get("/update", func(ctx iris.Context) {
 		//更新会根据会话的“Expires”字段重置过期时间
-
+		
 		// updates resets the expiration based on the session's `Expires` field.
 		if err := sess.ShiftExpiration(ctx); err != nil {
 			if errors.Is(err, sessions.ErrNotFound) {
@@ -127,3 +138,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }
+```

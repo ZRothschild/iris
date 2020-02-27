@@ -1,24 +1,33 @@
+# `sessions` badger数据库存储会话
+## 目录结构
+> 主目录`badger`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
 	"errors"
-	"os"
 	"time"
 
 	"github.com/kataras/iris/v12"
 
 	"github.com/kataras/iris/v12/sessions"
-	"github.com/kataras/iris/v12/sessions/sessiondb/boltdb"
+	"github.com/kataras/iris/v12/sessions/sessiondb/badger"
 )
 
 func main() {
-	db, err := boltdb.New("./sessions.db", os.FileMode(0750))
+	db, err := badger.New("./data")
 	if err != nil {
 		panic(err)
 	}
-	//当按下control+C/cmd + C时关闭并解锁数据库
+	//当按下control + C/cmd + C时关闭并解锁数据库
 
-	// close and unlobkc the database when control+C/cmd+C pressed
+	// close and unlock the database when control+C/cmd+C pressed
 	iris.RegisterOnInterrupt(func() {
 		db.Close()
 	})
@@ -50,7 +59,8 @@ func main() {
 
 		// set session values
 		s.Set("name", "iris")
-		//测试是否在这里设置
+        //测试是否在这里设置
+
 		// test if set here
 		ctx.Writef("All ok session value of the 'name' is: %s", s.GetString("name"))
 	})
@@ -95,7 +105,6 @@ func main() {
 
 	app.Get("/clear", func(ctx iris.Context) {
 		//删除所有key
-
 		// removes all entries
 		sess.Start(ctx).Clear()
 	})
@@ -109,7 +118,7 @@ func main() {
 
 	app.Get("/update", func(ctx iris.Context) {
 		//更新会根据会话的“Expires”字段重置过期时间
-
+		
 		// updates resets the expiration based on the session's `Expires` field.
 		if err := sess.ShiftExpiration(ctx); err != nil {
 			if errors.Is(err, sessions.ErrNotFound) {
@@ -127,3 +136,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }
+```

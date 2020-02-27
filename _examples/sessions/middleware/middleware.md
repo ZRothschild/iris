@@ -1,3 +1,14 @@
+# `seesion`会话中间件
+## 目录结构
+> 主目录`middleware`
+```html
+    —— main.go
+
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -193,9 +204,10 @@ func main() {
 
 		ctx.Writef("[]businessModel[0].Name remains: %s", firstModel.Name)
 		//名称应保持为"Edward"
-
+		
 		// the name should remains "Edward"
 	})
 
 	app.Run(iris.Addr(":8080"))
 }
+```
