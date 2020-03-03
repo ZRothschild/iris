@@ -20,6 +20,8 @@ var validStackFuncs = []func(string) bool{
 	},
 }
 
+// RuntimeCallerStack返回应用程序的`file:line`(错误所在文件的行数) 堆栈跟踪，以提供有关错误原因的更多信息
+
 // RuntimeCallerStack returns the app's `file:line` stacktrace
 // to give more information about an error cause.
 func RuntimeCallerStack() (s string) {
@@ -43,14 +45,20 @@ func RuntimeCallerStack() (s string) {
 	return s
 }
 
+// HTTPError描述HTTP错误
+
 // HTTPError describes an HTTP error.
 type HTTPError struct {
 	error
-	Stack       string    `json:"-"` // the whole stacktrace.
-	CallerStack string    `json:"-"` // the caller, file:lineNumber
-	When        time.Time `json:"-"` // the time that the error occurred.
+	Stack       string    `json:"-"` // 整个堆栈跟踪 | the whole stacktrace.
+	CallerStack string    `json:"-"` // 调用者，文件：lineNumber | the caller, file:lineNumber
+	When        time.Time `json:"-"` // 错误发生的时间 | the time that the error occurred.
+	// ErrorCode int：可能是已知错误代码的集合
+
 	// ErrorCode int: maybe a collection of known error codes.
 	StatusCode int `json:"statusCode"`
+	//也可以命名为“原因”，它也是错误的信息
+
 	// could be named as "reason" as well
 	//  it's the message of the error.
 	Description string `json:"description"`
@@ -81,6 +89,8 @@ func (err HTTPError) writeHeaders(ctx iris.Context) {
 	ctx.Header("X-Content-Type-Options", "nosniff")
 }
 
+// LogFailure将失败输出到"logger"
+
 // LogFailure will print out the failure to the "logger".
 func LogFailure(logger io.Writer, ctx iris.Context, err HTTPError) {
 	timeFmt := err.When.Format("2006/01/02 15:04:05")
@@ -89,6 +99,9 @@ func LogFailure(logger io.Writer, ctx iris.Context, err HTTPError) {
 	fmt.Fprintf(logger, "%s\n%sIP: %s\n%sURL: %s\n%sSource: %s\n",
 		firstLine, whitespace, ctx.RemoteAddr(), whitespace, ctx.FullRequestURI(), whitespace, err.CallerStack)
 }
+
+//失败将发送状态码，写出错误原因
+//并返回HTTPError供进一步使用，即记录，请参见`InternalServerError`。
 
 // Fail will send the status code, write the error's reason
 // and return the HTTPError for further use, i.e logging, see `InternalServerError`.
@@ -99,6 +112,9 @@ func Fail(ctx iris.Context, statusCode int, err error, format string, args ...in
 	ctx.WriteString(httpErr.Description)
 	return httpErr
 }
+
+// FailJSON将错误数据作为JSON发送给客户端。
+//对于API很有用。
 
 // FailJSON will send to the client the error data as JSON.
 // Useful for APIs.
@@ -111,6 +127,9 @@ func FailJSON(ctx iris.Context, statusCode int, err error, format string, args .
 	return httpErr
 }
 
+// InternalServerError记录到服务器的终端，并将500 Internal Server Error分发给客户端
+// 内部服务器错误至关重要，因此我们将其记录到os.Stderr中
+
 // InternalServerError logs to the server's terminal
 // and dispatches to the client the 500 Internal Server Error.
 // Internal Server errors are critical, so we log them to the `os.Stderr`.
@@ -118,11 +137,16 @@ func InternalServerError(ctx iris.Context, err error, format string, args ...int
 	LogFailure(os.Stderr, ctx, Fail(ctx, iris.StatusInternalServerError, err, format, args...))
 }
 
+// InternalServerErrorJSON的行为与`InternalServerError`完全相同，但是它将数据作为JSON发送
+//对于API很有用
+
 // InternalServerErrorJSON acts exactly like `InternalServerError` but instead it sends the data as JSON.
 // Useful for APIs.
 func InternalServerErrorJSON(ctx iris.Context, err error, format string, args ...interface{}) {
 	LogFailure(os.Stderr, ctx, FailJSON(ctx, iris.StatusInternalServerError, err, format, args...))
 }
+
+// UnauthorizedJSON发送StatusUnauthorized（401）HTTPError值的JSON格式
 
 // UnauthorizedJSON sends JSON format of StatusUnauthorized(401) HTTPError value.
 func UnauthorizedJSON(ctx iris.Context, err error, format string, args ...interface{}) HTTPError {

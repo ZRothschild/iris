@@ -4,6 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
+// GetIndexHandler处理GET: /
+
 // GetIndexHandler handles the GET: /
 func GetIndexHandler(ctx iris.Context) {
 	ctx.ViewData("Title", "Index Page")

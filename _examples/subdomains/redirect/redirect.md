@@ -1,3 +1,21 @@
+# 域名重定向
+## 目录结构
+> 主目录`redirect`
+```html
+    —— hosts
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `hosts`
+```editorconfig
+127.0.0.1	mydomain.com
+127.0.0.1	www.mydomain.com
+
+# Windows: Drive:/Windows/system32/drivers/etc/hosts, on Linux: /etc/hosts
+```
+> `main.go`
+```go
 //包main显示了如何使用app.WWW方法注册一个简单的'www'子域，
 //该方法将注册一个路由器包装器，该包装器会将所有'mydomain.com'请求重定向到'www.mydomain.com'
 // “hosts”文件，以了解如何在本地计算机上测试“ mydomain.com”。
@@ -81,7 +99,7 @@ func newApp() *iris.Application {
 
 	//注意，app.Party("mysubdomain.") 和app.Subdomain("mysubdomain")完全相同
 	//不同之处在于第二个可以省略最后一个点('.')。
-
+	
 	// Note that app.Party("mysubdomain.") and app.Subdomain("mysubdomain")
 	// is the same exactly thing, the difference is that the second can omit the last dot('.').
 
@@ -99,3 +117,36 @@ func usersIndex(ctx iris.Context) {
 func getLogin(ctx iris.Context) {
 	ctx.Writef("This is the www.mydomain.com/users/login endpoint.")
 }
+```
+> `main_test.go`
+```go
+package main
+
+import (
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+func TestSubdomainRedirectWWW(t *testing.T) {
+	app := newApp()
+	root := strings.TrimSuffix(addr, ":80")
+
+	e := httptest.New(t, app)
+
+	tests := []struct {
+		path     string
+		response string
+	}{
+		{"/", fmt.Sprintf("This is the www.%s endpoint.", root)},
+		{"/users", fmt.Sprintf("This is the www.%s/users endpoint.", root)},
+		{"/users/login", fmt.Sprintf("This is the www.%s/users/login endpoint.", root)},
+	}
+
+	for _, test := range tests {
+		e.GET(test.path).Expect().Status(httptest.StatusOK).Body().Equal(test.response)
+	}
+}
+```

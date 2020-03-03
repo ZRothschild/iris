@@ -12,6 +12,9 @@ import (
 
 func main() {
 	app := iris.New()
+	//您获得了完整的调试消息，这在使用MVC时很有用，并且您希望
+	//确保您的代码与Iris的MVC体系结构保持一致。
+
 	// You got full debug messages, useful when using MVC and you want to make
 	// sure that your code is aligned with the Iris' MVC Architecture.
 	app.Logger().SetLevel("debug")

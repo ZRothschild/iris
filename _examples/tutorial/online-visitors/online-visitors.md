@@ -1,3 +1,107 @@
+# `Iris`教程动态记录线上访客量
+## 目录结构
+> 主目录`online-visitors`
+```html
+    —— static
+        —— assets
+            —— js
+                —— visitors.js
+    —— templates
+        —— index.html
+        —— other.html
+    —— main.go
+```
+## 代码示例
+> `static/assets/js/visitors.js`
+```js
+(function () {
+  var events = {
+    default: {
+      _OnNamespaceConnected: function (ns, msg) {
+        ns.joinRoom(PAGE_SOURCE);
+      },
+      _OnNamespaceDisconnect: function (ns, msg) {
+        document.getElementById("online_views").innerHTML = "you've been disconnected";
+      },
+      onNewVisit: function (ns, msg) {
+        var text = "1 online view";
+        var onlineViews = Number(msg.Body);
+        if (onlineViews > 1) {
+          text = onlineViews + " online views";
+        }
+        document.getElementById("online_views").innerHTML = text;
+      }
+    }
+  };
+
+  neffos.dial("ws://localhost:8080/my_endpoint", events).then(function (client) {
+    client.connect("default");
+  });
+})();
+```
+> `templates/index.html`
+```html
+<html>
+<head>
+    <title>Online visitors example</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, "San Francisco", "Helvetica Neue", "Noto", "Roboto", "Calibri Light", sans-serif;
+            color: #212121;
+            font-size: 1.0em;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 750px;
+            margin: auto;
+            padding: 15px;
+        }
+        #online_views {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span id="online_views">1 online view</span>
+    </div>
+    <script type="text/javascript">
+        /* take the page source from our passed struct  on .Render */
+        var PAGE_SOURCE = {{ .PageID }}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/neffos.js@latest/dist/neffos.min.js"></script>
+    <script src="/js/visitors.js"></script>
+</body>
+</html>
+```
+> `templates/other.html`
+```html
+<html>
+<head>
+    <title>Different page, different results</title>
+    <style>
+        #online_views {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <span id="online_views">1 online view</span>
+    <script type="text/javascript">
+        /* take the page source from our passed struct  on .Render */
+        var PAGE_SOURCE = {{ .PageID }}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/neffos.js@latest/dist/neffos.min.js"></script>
+    <script src="/js/visitors.js"></script>
+</body>
+
+</html>
+```
+> `main.go` 结合 js 看看就明白了
+```go
 package main
 
 import (
@@ -163,8 +267,8 @@ func onRoomJoined(ns *websocket.NSConn, msg websocket.Message) error {
 		Namespace: msg.Namespace,
 		Room:      pageSource,
 		//触发"onNewVisit"客户端事件
-		Event: "onNewVisit", // fire the "onNewVisit" client event.
-		Body:  viewsCountBytes(viewsCount),
+		Event:     "onNewVisit", // fire the "onNewVisit" client event.
+		Body:      viewsCountBytes(viewsCount),
 	})
 
 	return nil
@@ -197,3 +301,4 @@ func onRoomLeft(ns *websocket.NSConn, msg websocket.Message) error {
 
 	return nil
 }
+```

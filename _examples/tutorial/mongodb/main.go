@@ -51,7 +51,7 @@ func main() {
 	db := client.Database("store")
 
 	var (
-		// Collections.
+		// 集合 | Collections.
 		moviesCollection = db.Collection("movies")
 
 		// Services.

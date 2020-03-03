@@ -34,6 +34,9 @@ func newApp() *iris.Application {
 
 func h(ctx iris.Context) {
 	username, password, _ := ctx.Request().BasicAuth()
+	//第三个参数将始终为true，因为中间件会确保做到这一点，
+	//否则将不执行该处理程序
+
 	// third parameter it will be always true because the middleware
 	// makes sure for that, otherwise this handler will not be executed.
 

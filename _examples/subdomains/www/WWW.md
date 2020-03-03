@@ -1,3 +1,42 @@
+# www域名使用
+## 目录结构
+> 主目录`WWW`
+```html
+    —— hosts
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `main.go`
+```editorconfig
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+127.0.0.1       localhost
+::1             localhost
+#-iris-For development machine, you have to configure your dns also for online, search google how to do it if you don't know
+127.0.0.1		mydomain.com
+127.0.0.1		www.mydomain.com
+#-END iris-
+```
+> `main.go`
+```go
 package main
 
 import (
@@ -90,3 +129,64 @@ func info(ctx iris.Context) {
 	ctx.Writef("\nInfo\n\n")
 	ctx.Writef("Method: %s\nSubdomain: %s\nPath: %s", method, subdomain, path)
 }
+```
+> `main_test.go`
+```go
+package main
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/kataras/iris/v12/httptest"
+)
+
+type testRoute struct {
+	path      string
+	method    string
+	subdomain string
+}
+
+func (r testRoute) response() string {
+	msg := fmt.Sprintf("\nInfo\n\nMethod: %s\nSubdomain: %s\nPath: %s", r.method, r.subdomain, r.path)
+	return msg
+}
+
+func TestSubdomainWWW(t *testing.T) {
+	app := newApp()
+
+	tests := []testRoute{
+		// host
+		{"/", "GET", ""},
+		{"/about", "GET", ""},
+		{"/contact", "GET", ""},
+		{"/api/users", "GET", ""},
+		{"/api/users/42", "GET", ""},
+		{"/api/users", "POST", ""},
+		{"/api/users/42", "PUT", ""},
+		// www sub domain
+		{"/", "GET", "www"},
+		{"/about", "GET", "www"},
+		{"/contact", "GET", "www"},
+		{"/api/users", "GET", "www"},
+		{"/api/users/42", "GET", "www"},
+		{"/api/users", "POST", "www"},
+		{"/api/users/42", "PUT", "www"},
+	}
+
+	host := "localhost:1111"
+	e := httptest.New(t, app, httptest.Debug(false))
+
+	for _, test := range tests {
+
+		req := e.Request(test.method, test.path)
+		if subdomain := test.subdomain; subdomain != "" {
+			req.WithURL("http://" + subdomain + "." + host)
+		}
+
+		req.Expect().
+			Status(httptest.StatusOK).
+			Body().Equal(test.response())
+	}
+}
+```

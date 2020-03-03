@@ -23,6 +23,7 @@ type Bootstrapper struct {
 	Sessions *sessions.Sessions
 }
 
+// New返回一个新的Bootstrapper
 // New returns a new Bootstrapper.
 func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	b := &Bootstrapper{
@@ -39,11 +40,13 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	return b
 }
 
+// SetupViews加载模板
 // SetupViews loads the templates.
 func (b *Bootstrapper) SetupViews(viewsDir string) {
 	b.RegisterView(iris.HTML(viewsDir, ".html").Layout("shared/layout.html"))
 }
 
+//SetupSessions可选地初始化会话
 // SetupSessions initializes the sessions, optionally.
 func (b *Bootstrapper) SetupSessions(expires time.Duration, cookieHashKey, cookieBlockKey []byte) {
 	b.Sessions = sessions.New(sessions.Config{
@@ -53,12 +56,16 @@ func (b *Bootstrapper) SetupSessions(expires time.Duration, cookieHashKey, cooki
 	})
 }
 
+// SetupWebsockets设置websocket服务
 // SetupWebsockets prepares the websocket server.
 func (b *Bootstrapper) SetupWebsockets(endpoint string, handler websocket.ConnHandler) {
 	ws := websocket.New(websocket.DefaultGorillaUpgrader, handler)
 
 	b.Get(endpoint, websocket.Handler(ws))
 }
+
+// SetupErrorHandlers设置http错误处理程序
+//`(context.StatusCodeNotSuccessful`，默认为<200 || > = 400，但可以更改）
 
 // SetupErrorHandlers prepares the http error handlers
 // `(context.StatusCodeNotSuccessful`,  which defaults to < 200 || >= 400 but you can change it).
@@ -82,11 +89,17 @@ func (b *Bootstrapper) SetupErrorHandlers() {
 }
 
 const (
+	// StaticAssets是公共文件目录（如图像，css, js）的根目录
+
 	// StaticAssets is the root directory for public assets like images, css, js.
 	StaticAssets = "./public/"
+	// Favicon是我们应用程序 "StaticAssets" favicon路径
+
 	// Favicon is the relative 9to the "StaticAssets") favicon path for our app.
 	Favicon = "favicon.ico"
 )
+
+//Configure接受Configurator并在Bootstraper的上下文中运行它们
 
 // Configure accepts configurations and runs them inside the Bootstraper's context.
 func (b *Bootstrapper) Configure(cs ...Configurator) {
@@ -94,6 +107,10 @@ func (b *Bootstrapper) Configure(cs ...Configurator) {
 		c(b)
 	}
 }
+
+// Bootstrap设置我们的应用程序
+//
+//返回自身
 
 // Bootstrap prepares our application.
 //
@@ -106,9 +123,10 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 	)
 	b.SetupErrorHandlers()
 
-	// static files
+	// static files 静态文件
 	b.Favicon(StaticAssets + Favicon)
 	b.HandleDir(StaticAssets[1:len(StaticAssets)-1], StaticAssets)
+	//中间件，在静态文件之后
 
 	// middleware, after static files
 	b.Use(recover.New())
@@ -116,6 +134,8 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 
 	return b
 }
+
+//Listen使用指定的“地址”启动http服务器
 
 // Listen starts the http server with the specified "addr".
 func (b *Bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {

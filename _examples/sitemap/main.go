@@ -12,9 +12,10 @@ func main() {
 	app := newApp()
 
 	// http://localhost:8080/sitemap.xml
+	//仅列出在线GET静态路由
 	// Lists only online GET static routes.
 	//
-	// Reference: https://www.sitemaps.org/protocol.html
+	// Reference/参考 : https://www.sitemaps.org/protocol.html
 	app.Run(iris.Addr(":8080"), iris.WithSitemap(startURL))
 }
 

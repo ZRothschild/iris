@@ -1,3 +1,13 @@
+# `seesion`使用如何加密cookie
+## 目录结构
+> 主目录`securecookie`
+```html
+    —— main.go
+    —— main_test.go
+```
+## 代码示例
+> `main.go`
+```go
 package main
 
 //开发人员可以使用任何库来添加自定义cookie编码器/解码器(encoder/decoder.)
@@ -89,7 +99,7 @@ func newApp() *iris.Application {
 	//您也可以使用以下命令销毁处理程序外部的会话：
 	// mySessions.DestroyByID
 	// mySessions.DestroyAll
-
+	
 	// Note about destroy:
 	//
 	// You can destroy a session outside of a handler too, using the:
@@ -103,3 +113,34 @@ func main() {
 	app := newApp()
 	app.Run(iris.Addr(":8080"))
 }
+```
+> `main_test.go`
+```go
+package main
+
+import (
+	"testing"
+
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/httptest"
+)
+
+func TestSessionsEncodeDecode(t *testing.T) {
+	app := newApp()
+	e := httptest.New(t, app, httptest.URL("http://example.com"))
+
+	es := e.GET("/set").Expect()
+	es.Status(iris.StatusOK)
+	es.Cookies().NotEmpty()
+	es.Body().Equal("All ok session set to: iris")
+
+	e.GET("/get").Expect().Status(iris.StatusOK).Body().Equal("The name on the /set was: iris")
+	// delete and re-get
+	e.GET("/delete").Expect().Status(iris.StatusOK)
+	e.GET("/get").Expect().Status(iris.StatusOK).Body().Equal("The name on the /set was: ")
+	// set, clear and re-get
+	e.GET("/set").Expect().Body().Equal("All ok session set to: iris")
+	e.GET("/clear").Expect().Status(iris.StatusOK)
+	e.GET("/get").Expect().Status(iris.StatusOK).Body().Equal("The name on the /set was: ")
+}
+```

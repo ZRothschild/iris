@@ -4,6 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
+// GetFollowerHandler处理GET: /follower/{id}
+
 // GetFollowerHandler handles the GET: /follower/{id}
 func GetFollowerHandler(ctx iris.Context) {
 	id, _ := ctx.Params().GetInt64("id")

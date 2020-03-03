@@ -1,4 +1,4 @@
-# `route` http 错误处理
+# `route` 自定义HTTP错误处理
 ## 目录结构
 > 主目录`http-errors`
 ```html

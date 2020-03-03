@@ -7,8 +7,9 @@ import (
 )
 
 func newApp() *bootstrap.Bootstrapper {
-	app := bootstrap.New("Awesome App", "kataras2006@hotmail.com")
+	app := bootstrap.New("Awesome App", "873908960@qq.com")
 	app.Bootstrap()
+	//identity.Configure中间件配置； routes.Configure路由配置 【进去他们的文件里面看看就懂了的】
 	app.Configure(identity.Configure, routes.Configure)
 	return app
 }

@@ -20,6 +20,8 @@ import (
 const uploadsDir = "./public/uploads/"
 
 type uploadedFile struct {
+	// {name: "", size: } 是dropzone的唯一要求
+
 	// {name: "", size: } are the dropzone's only requirements.
 	Name string `json:"name"`
 	Size int64  `json:"size"`
@@ -28,7 +30,8 @@ type uploadedFile struct {
 type uploadedFiles struct {
 	dir   string
 	items []uploadedFile
-	mu    sync.RWMutex // slices are safe but RWMutex is a good practise for you.
+	//切片是安全的，但是RWMutex对您来说是一个好习惯
+	mu sync.RWMutex // slices are safe but RWMutex is a good practise for you.
 }
 
 func scanUploads(dir string) *uploadedFiles {
@@ -38,12 +41,14 @@ func scanUploads(dir string) *uploadedFiles {
 	if lindex != os.PathSeparator && lindex != '/' {
 		dir += string(os.PathSeparator)
 	}
+	//根据需要创建目录，如果返回空的上传文件； 跳过扫描
 
 	// create directories if necessary
 	// and if, then return empty uploaded files; skipping the scan.
 	if err := os.MkdirAll(dir, os.FileMode(0666)); err != nil {
 		return f
 	}
+	//否则扫描给定的"dir" 以查找文件
 
 	// otherwise scan the given "dir" for files.
 	f.scan(dir)
@@ -53,6 +58,8 @@ func scanUploads(dir string) *uploadedFiles {
 func (f *uploadedFiles) scan(dir string) {
 	f.dir = dir
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		//如果是我们之前保存的目录或缩略图，请跳过它
+
 		// if it's directory or a thumbnail we saved earlier, skip it.
 		if info.IsDir() || strings.HasPrefix(info.Name(), "thumbnail_") {
 			return nil
@@ -93,11 +100,14 @@ func (f *uploadedFiles) createThumbnail(uf uploadedFile) {
 	defer out.Close()
 
 	if strings.HasSuffix(name, ".jpg") {
+		//将jpeg解码为image.Image
+
 		// decode jpeg into image.Image
 		img, err := jpeg.Decode(file)
 		if err != nil {
 			return
 		}
+		//将新图像写入文件
 
 		// write new image to file
 		resized := resize.Thumbnail(180, 180, img, resize.Lanczos3)
@@ -109,11 +119,14 @@ func (f *uploadedFiles) createThumbnail(uf uploadedFile) {
 		if err != nil {
 			return
 		}
+		//将新图像写入文件
 
 		// write new image to file
-		resized := resize.Thumbnail(180, 180, img, resize.Lanczos3) // slower but better res
+		resized := resize.Thumbnail(180, 180, img, resize.Lanczos3) //速度较慢但分辨率更高 | slower but better res
 		png.Encode(out, resized)
 	}
+	//依此类推...您明白了这一点，实际上，可以简化此代码
+
 	// and so on... you got the point, this code can be simplify, as a practise.
 }
 
@@ -134,6 +147,8 @@ func main() {
 	})
 
 	app.Post("/upload", iris.LimitRequestBodySize(10<<20), func(ctx iris.Context) {
+		//从dropzone请求中获取文件
+
 		// Get the file from the dropzone request
 		file, info, err := ctx.FormFile("file")
 		if err != nil {
@@ -157,6 +172,7 @@ func main() {
 		defer out.Close()
 
 		io.Copy(out, file)
+		//可选 将该文件添加到列表中，以便在刷新时可见
 
 		// optionally, add that file to the list in order to be visible when refresh.
 		uploadedFile := files.add(fname, info.Size)

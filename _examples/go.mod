@@ -4,15 +4,21 @@ go 1.13
 
 require (
 	github.com/AndreasBriese/bbloom v0.0.0-20190825152654-46b345b51c96 // indirect
+	github.com/Shopify/sarama v1.26.1 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
+	github.com/etcd-io/bbolt v1.3.3
 	github.com/golang/protobuf v1.3.4 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/kataras/iris/v12 v12.1.8 // indirect
+	github.com/iris-contrib/go.uuid v2.0.0+incompatible
+	github.com/kataras/iris/v12 v12.1.8
 	github.com/klauspost/compress v1.10.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/zserge/webview v0.0.0-20200301213939-0eb933f25974
+	go.mongodb.org/mongo-driver v1.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d // indirect
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect

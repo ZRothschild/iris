@@ -23,6 +23,8 @@ func (h *MovieHandler) GetAll(ctx iris.Context) {
 	}
 
 	if movies == nil {
+		//如果movies为空，则将返回"null"，就可以使用此“技巧”，将null 转换成"[]"空数组json返回
+
 		// will return "null" if empty, with this "trick" we return "[]" json.
 		movies = make([]store.Movie, 0)
 	}

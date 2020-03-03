@@ -4,6 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
+// GetLikeHandler处理GET: /like/{id}
+
 // GetLikeHandler handles the GET: /like/{id}
 func GetLikeHandler(ctx iris.Context) {
 	id, _ := ctx.Params().GetInt64("id")

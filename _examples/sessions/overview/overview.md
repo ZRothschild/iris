@@ -1,3 +1,13 @@
+# `seesion`的验证使用简要介绍
+## 目录结构
+> 主目录`overview`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+
+```go
 package main
 
 import (
@@ -51,3 +61,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"))
 }
+```

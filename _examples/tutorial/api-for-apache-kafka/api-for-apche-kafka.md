@@ -1,3 +1,13 @@
+# 使用Iris为Apache Kafka编写API
+## 目录结构
+> 主目录`api-for-apache-kafka`
+```html
+    —— src
+        —— main.go
+```
+## 代码示例
+> `main.go`
+```go
 package main
 
 import (
@@ -430,3 +440,41 @@ func getTopicConsumeSSEHandler(ctx iris.Context) {
 		}
 	}
 }
+```
+文章即将发布，关注并继续关注
+- <https://medium.com/@kataras>
+- <https://dev.to/kataras>
+
+查看 [功能齐全的例子](src/main.go).
+
+## 图片
+
+![](0_docs.png)
+
+![](1_create_topic.png)
+
+![](2_list_topics.png)
+
+![](3_store_to_topic.png)
+
+![](4_retrieve_from_topic_real_time.png)
+
+## kafka使用 【我是是Ubuntu】
+1.下载压kafka解
+> wget http://mirror.bit.edu.cn/apache/kafka/2.4.0/kafka_2.13-2.4.0.tgz
+> sudo tar -zvxf kafka_2.13-2.4.0.tgz
+2. 进入解压包 启动Zookeeper，kafka
+> bin/zookeeper-server-start.sh config/zookeeper.properties 【启动】
+> bin/kafka-server-start.sh config/server.properties 【启动】
+3. 使用kafka
+> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test【使用 kafka-topics.sh 创建单分区单副本的 topic test】
+> bin/kafka-topics.sh --list --zookeeper localhost:2181 【查看 topic 列表】
+> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test 【产生消息，创建消息生产者】
+> bin/kafka-console-consumer.sh --broker-list localhost:9092 --topic test【消费消息，创建消息消费者】
+> bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic test【查看Topic消息】
+4. 停止运行Zookeeper，kafka(要后台运行才有的关)
+> bin/zookeeper-server-stop.sh config/zookeeper.properties 【可以不加配置文件名称】
+> bin/kafka-server-stop.sh config/server.properties 【可以不加配置文件名称】
+
+
+

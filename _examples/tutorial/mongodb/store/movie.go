@@ -12,6 +12,7 @@ import (
 )
 
 type Movie struct {
+	/*您需要 bson:"_id" 才能以ID填充检索 */
 	ID          primitive.ObjectID `json:"_id" bson:"_id"` /* you need the bson:"_id" to be able to retrieve with ID filled */
 	Name        string             `json:"name"`
 	Cover       string             `json:"cover"`
@@ -49,6 +50,10 @@ func NewMovieService(collection *mongo.Collection) MovieService {
 }
 
 func (s *movieService) GetAll(ctx context.Context) ([]Movie, error) {
+	// 注意：
+	// mongodb的go-driver文档中，您可以将`nil`传递给"find all"，但这会导致NilDocument错误，可能是错误或documentation错误
+	// 您必须传递`bson.D {}`。
+
 	// Note:
 	// The mongodb's go-driver's docs says that you can pass `nil` to "find all" but this gives NilDocument error,
 	// probably it's a bug or a documentation's mistake, you have to pass `bson.D{}` instead.
@@ -115,6 +120,8 @@ func (s *movieService) Create(ctx context.Context, m *Movie) error {
 	if err != nil {
 		return err
 	}
+	//如果Movie.ID字段上有`bson:"_id`，以下内容将不起作用，
+	//没有`bson:"_id`，我们就需要手动生成了一个新ID（如上所示）
 
 	// The following doesn't work if you have the `bson:"_id` on Movie.ID field,
 	// therefore we manually generate a new ID (look above).
@@ -133,6 +140,8 @@ func (s *movieService) Update(ctx context.Context, id string, m Movie) error {
 	// update := bson.D{
 	// 	{Key: "$set", Value: m},
 	// }
+	// ^这将覆盖所有字段，您可以执行此操作，具体取决于您的设计。 但是让我们检查每个字段：
+
 	// ^ this will override all fields, you can do that, depending on your design. but let's check each field:
 	elem := bson.D{}
 

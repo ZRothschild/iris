@@ -1,3 +1,25 @@
+# `go iris caddy`使用示例2
+## 目录结构
+> 主目录`server2`
+```html
+    —— Caddyfile
+    —— main.go
+```
+## 代码示例
+> `Caddyfile`
+```editorconfig
+example.com {
+	header / Server "Iris"
+	proxy / example.com:9091 # localhost:9091
+}
+
+api.example.com {
+	header / Server "Iris"
+	proxy / api.example.com:9092 # localhost:9092
+}
+```
+> `main.go`
+```go
 package main
 
 import (
@@ -50,7 +72,6 @@ func (c *UserController) GetBy(id int64) User {
 	// Select User by ID == $id.
 	return User{id}
 }
-
 // Post处理POST /user
 
 // Post handles POST /user
@@ -91,3 +112,4 @@ func (c *UserController) GetFollowersBy(id int) []User {
 	// Select all followers by user ID == $id
 	return []User{ /* ... */ }
 }
+```
