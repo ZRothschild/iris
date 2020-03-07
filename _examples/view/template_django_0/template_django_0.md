@@ -1,3 +1,29 @@
+# go iris 视图 django 模板
+## 目录结构
+> 主目录`template_django_0`
+```html
+    —— templates
+        —— hi.html
+    —— main.go
+```
+## 代码示例
+> `templates/hi.html`
+```html
+<html>
+<head>
+<title>{{title}}</title>
+</head>
+<body>
+	<h1>Hi {{name|capfirst}} </h1>
+	
+	<h2>{{greet(name)}}</h2>
+
+	<h3>Server started about {{serverStartTime|timesince}}. Refresh the page to see different result</h3>
+</body>
+</html>
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -43,3 +69,4 @@ func hi(ctx iris.Context) {
 		"serverStartTime": startTime,
 	})
 }
+```

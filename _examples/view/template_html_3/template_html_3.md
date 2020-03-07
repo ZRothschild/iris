@@ -1,3 +1,72 @@
+# go iris 视图 HTML 模板引擎第3个示例
+## 目录结构
+> 主目录`template_html_3`
+```html
+    —— templates
+        —— page.html
+    —— main.go
+```
+## 代码示例
+> `templates/page.html`
+```html
+<html>
+
+<head>
+  <title>template_html_3</title>
+  <style>
+    a {
+      color: #0f7afc;
+      border-bottom-color: rgba(15, 122, 252, 0.2);
+      text-decoration: none
+    }
+
+    a:hover {
+      color: #cf0000;
+      border-bottom-color: rgba(208, 64, 0, 0.2);
+      text-decoration: none
+    }
+
+    a:visited {
+      color: #800080;
+      border-bottom-color: rgba(128, 0, 128, 0.2);
+      text-decoration: none
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="{{urlpath "my-page1"}}">/mypath</a>
+  <br />
+  <br />
+
+  <a href="{{urlpath "my-page2" "theParam1" "theParam2"}}">/mypath2/{paramfirst}/{paramsecond}</a>
+  <br />
+  <br />
+
+  <a href="{{urlpath "my-page3" "theParam1" "theParam2AfterStatic"}}">/mypath3/{paramfirst}/statichere/{paramsecond}</a>
+  <br />
+  <br />
+
+  <a href="{{urlpath "my-page4" "theParam1" "theparam2AfterStatic"  "otherParam"  "matchAnything"}}">
+    /mypath4/{paramfirst}/statichere/{paramsecond}/{otherparam}/{something:path}</a>
+  <br />
+  <br />
+
+  <a href="{{urlpath "my-page5" "theParam1" "theParam2Afterstatichere" "otherParam"  "matchAnythingAfterStatic"}}">
+    /mypath5/{paramfirst}/statichere/{paramsecond}/{otherparam}/anything/{anything:path}</a>
+  <br />
+  <br />
+
+  <a href={{urlpath "my-page6" .ParamsAsArray }}>
+    /mypath6/{paramfirst}/{paramsecond}/statichere/{paramThirdAfterStatic}
+  </a>
+</body>
+
+</html>
+```
+> `main.go`
+```golang
 //包一个主要示例，说明如何命名路由并使用自定义'url path'HTML模板引擎，其他模板引擎也是如此
 // Package main an example on how to naming your routes & use the custom 'url path' HTML Template Engine, same for other template engines.
 package main
@@ -53,7 +122,7 @@ func main() {
 		//打印：my-page1的路径是：/mypath
 		//如果是使用命名参数的路径
 		//然后使用"r.ResolvePath(paramValuesHere)"
-
+		
 		// if routeName == "my-page1"
 		// prints: The path of of my-page1 is: /mypath
 		// if it's a path which takes named parameters
@@ -70,3 +139,4 @@ func main() {
 func writePathHandler(ctx iris.Context) {
 	ctx.Writef("Hello from %s.", ctx.Path())
 }
+```

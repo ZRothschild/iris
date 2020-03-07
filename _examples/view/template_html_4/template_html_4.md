@@ -1,3 +1,98 @@
+# go iris 视图 html 模板引擎第4个示例
+## 目录结构
+> 主目录`template_html_4`
+```html
+    —— templates
+        —— page.html
+    —— hosts
+    —— main.go
+```
+## 代码示例
+> `templates/page.html`
+```html
+<!--  普通命名路由和动态子域命名路由之间的唯一区别是url的第一个参数
+是子域部分，而不是命名参数 -->
+
+<!-- the only difference between normal named routes and dynamic subdomains named routes is that the first argument of  url
+is the subdomain part instead of named parameter-->
+
+<a href="{{url "my-page1" "username1"}}">username1.127.0.0.1:8080/mypath</a>
+<br />
+<br />
+
+<a href="{{url  "my-page2" "username2" "theParam1" "theParam2"}}">
+    username2.127.0.0.1:8080/mypath2/{paramfirst}/{paramsecond}
+</a>
+<br />
+<br />
+
+<a href="{{url "my-page3" "username3" "theParam1" "theParam2AfterStatic"}}">
+    username3.127.0.0.1:8080/mypath3/{paramfirst}/statichere/{paramsecond}
+</a>
+<br />
+<br />
+
+<a href="{{url "my-page4" "username4" "theParam1" "theparam2AfterStatic" "otherParam" "matchAnything"}}">
+    username4.127.0.0.1:8080/mypath4/{paramfirst}/statichere/{paramsecond}/{otherParam}/{something:path}
+</a>
+<br />
+<br />
+
+<a href="{{url "my-page5" "username5" "theParam1" "theparam2AfterStatic" "otherParam" "matchAnything"}}">
+    username5.127.0.0.1:8080/mypath5/{paramfirst}/statichere/{paramsecond}/{otherparam}/anything/{something:path}
+</a>
+<br/>
+<br/>
+
+<a href="{{url "my-page6" .ParamsAsArray }}">
+    username5.127.0.0.1:8080/mypath6/{paramfirst}/{paramsecond}/staticParam/{paramThirdAfterStatic}
+</a>
+<br/>
+<br/>
+
+<a href="{{urlpath "my-page7" "theParam1" "theParam2" "theParam3" }}">
+    mypath7/{paramfirst}/{paramsecond}/static/{paramthird}
+</a>
+<br/>
+<br/>
+```
+> `hosts`
+```editorconfig
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+127.0.0.1       localhost
+::1             localhost
+#-iris-For development machine, you have to configure your dns also for online, search google how to do it if you don't know
+
+127.0.0.1		username1.127.0.0.1
+127.0.0.1		username2.127.0.0.1
+127.0.0.1		username3.127.0.0.1
+127.0.0.1		username4.127.0.0.1
+127.0.0.1		username5.127.0.0.1
+# note that you can always use custom subdomains
+#-END iris-
+
+# Windows: Drive:/Windows/system32/drivers/etc/hosts, on Linux: /etc/hosts
+```
+> `main.go`
+```golang
 //包一个有关如何命名路由并使用自定义'url' HTML模板引擎（与其他模板引擎相同）的示例
 // Package main an example on how to naming your routes & use the custom 'url' HTML Template Engine, same for other template engines.
 package main
@@ -82,7 +177,6 @@ func main() {
 func emptyHandler(ctx iris.Context) {
 	ctx.Writef("Hello from subdomain: %s , you're in path:  %s", ctx.Subdomain(), ctx.Path())
 }
-
 // 注意：
 //如果在{{url}}或{{urlpath}}上有一个空字符串，
 //则表示args长度与路由的参数长度不匹配，
@@ -92,3 +186,4 @@ func emptyHandler(ctx iris.Context) {
 // If you got an empty string on {{ url }} or {{ urlpath }} it means that
 // args length are not aligned with the route's parameters length
 // or the route didn't found by the passed name.
+```

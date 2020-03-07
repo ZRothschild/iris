@@ -10,8 +10,12 @@ type Service interface {
 }
 
 type MemoryService struct {
+	//键=会话ID，值此会话ID拥有的todo事项列表
+
 	// key = session id, value the list of todo items that this session id has.
 	items map[string][]Item
+	//由locker保护以进行并发访问
+
 	// protected by locker for concurrent access.
 	mu sync.RWMutex
 }

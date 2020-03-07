@@ -1,3 +1,7 @@
+//包main运行一个基于go-socket.io的websocket服务器
+//一个与Iris兼容的克隆：https://github.com/googollee/go-socket.io#example，
+// 使用iris.FromStd来转换其处理程序
+//
 // Package main runs a go-socket.io based websocket server.
 // An Iris compatible clone of: https://github.com/googollee/go-socket.io#example,
 // use of `iris.FromStd` to convert its handler.

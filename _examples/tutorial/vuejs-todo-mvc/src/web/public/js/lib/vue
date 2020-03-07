@@ -1,2 +1,5 @@
+vue.js并非在此处减少示例的磁盘空间
+而是使用https://vuejs.org/js/vue.js代替
+
 vue.js is not here to reduce the disk space for the examples.
 Instead https://vuejs.org/js/vue.js is used instead.

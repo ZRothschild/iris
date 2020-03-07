@@ -1,17 +1,28 @@
+<!-- 消息的输入 -->
+
 <!-- the message's input -->
 <input id="input" type="text" />
+
+<!-- 当单击时，一个websocket事件将被发送到服务器，在此示例中，我们注册了'chat'-->
 
 <!-- when clicked then a websocket event will be sent to the server, at this example we registered the 'chat' -->
 <button id="sendBtn" disabled>Send</button>
 
+<!-- 消息将显示在这里 -->
 <!-- the messages will be shown here -->
 <pre id="output"></pre>
+<!-- 从CDN或本地导入iris客户端库以供浏览器使用。但是，`neffos.(min.)js`也是NPM软件包，
+     因此也可以将其用作package.json和所有nodejs-npm的依赖项 工具可用：
+     有关更多信息，请参见"browserify"示例-->
+
 <!-- import the iris client-side library for browser from a CDN or locally.
      However, `neffos.(min.)js` is a NPM package too so alternatively,
      you can use it as dependency on your package.json and all nodejs-npm tooling become available:
      see the "browserify" example for more-->
 <script src="https://cdn.jsdelivr.net/npm/neffos.js@latest/dist/neffos.min.js"></script>
 <script>
+    //`neffos`全局变量现在可用
+
     // `neffos` global variable is available now.
     var scheme = document.location.protocol == "https:" ? "wss" : "ws";
     var port = document.location.port ? ":" + document.location.port : "";
@@ -19,9 +30,14 @@
 
     const enableJWT = true;
     if (enableJWT) {
+        //这只是示例内容的签名和有效内容，请使用您的逻辑替换它
+
         // This is just a signature and a payload of an example content, 
         // please replace this with your logic.
-        //
+
+        //在令牌前添加一个随机字母以使其无效，
+        //并确保不允许该客户端链接Websocket服务器
+
         // Add a random letter in front of the token to make it
         // invalid and see that this client is not allowed to dial the websocket server.
         const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjozMjEzMjF9.8waEX7-vPKACa-Soi1pQvW3Rl8QY-SUFcHKTLZI4mvU";
@@ -56,6 +72,9 @@
     const username = window.prompt("Your username?");
 
     async function runExample() {
+        //您可以省略"default"，而仅定义事件，名namespace将是一个空字符串“”，
+        // 但是，如果您决定对此示例进行任何更改，请确保这些更改反映在../server.go内部 文件
+
         // You can omit the "default" and simply define only Events, the namespace will be an empty string"",
         // however if you decide to make any changes on this example make sure the changes are reflecting inside the ../server.go file as well.
         try {
@@ -77,6 +96,10 @@
                     "X-Username": username,
                 }
             });
+            //您可以等待连接，也可以只是conn.connect("connect")，
+            //然后将`handleNamespaceConnectedConn`放在`_OnNamespaceConnected`回调中
+            // const nsConn = await conn.connect("default");
+            // nsConn.emit(...); handleNamespaceConnectedConn(nsConn);
 
             // You can either wait to conenct or just conn.connect("connect")
             // and put the `handleNamespaceConnectedConn` inside `_OnNamespaceConnected` callback instead.
@@ -91,9 +114,14 @@
 
     runExample();
 
+    //如果可用"await"和"async"，请改用它们^，所有现代浏览器都支持它们，
+    //所有的JavaScript示例都将使用async/await方法而不是promise then/catch回调编写。
+    // 然后/捕获如下：
+
     // If "await" and "async" are available, use them instead^, all modern browsers support those,
     // all of the javascript examples will be written using async/await method instead of promise then/catch callbacks.
     // A usage example of promise then/catch follows:
+
     // neffos.dial(wsURL, {
     //     default: { // "default" namespace.
     //         _OnNamespaceConnected: function (ns, msg) {

@@ -1,3 +1,77 @@
+# go iris websocket 本地消息示例
+## 目录结构
+> 主目录`native-messages`
+```html
+    —— static
+        —— js
+            —— chat.js
+    —— templates
+        —— client.html
+    —— main.go
+```
+## 代码示例
+> `static/js/chat.js`
+```javascript
+var messageTxt = document.getElementById("messageTxt");
+var messages = document.getElementById("messages");
+var sendBtn = document.getElementById("sendBtn")
+
+w = new WebSocket("ws://" + HOST + "/my_endpoint");
+w.onopen = function () {
+	console.log("Websocket connection enstablished");
+};
+
+w.onclose = function () {
+	appendMessage("<div><center><h3>Disconnected</h3></center></div>");
+};
+w.onmessage = function (message) {
+	appendMessage("<div>" + message.data + "</div>");
+};
+
+sendBtn.onclick = function () {
+	myText = messageTxt.value;
+	messageTxt.value = "";
+
+	appendMessage("<div style='color: red'> me: " + myText + "</div>");
+	w.send(myText);
+};
+
+messageTxt.addEventListener("keyup", function (e) {
+	if (e.keyCode === 13) {
+		e.preventDefault();
+
+		sendBtn.click();
+	}
+});
+
+function appendMessage(messageDivHTML) {
+	messages.insertAdjacentHTML('afterbegin', messageDivHTML);
+}
+```
+> `templates/client.html`
+```html
+<html>
+
+<head>
+	<title>{{ .Title}}</title>
+</head>
+
+<body style="padding:10px;">
+	<input type="text" id="messageTxt" />
+	<button type="button" id="sendBtn">Send</button>
+	<div id="messages" style="width: 375px;margin:10 0 0 0px;border-top: 1px solid black;">
+	</div>
+
+	<script type="text/javascript">
+		var HOST = {{.Host }}
+	</script>
+	<script src="js/chat.js" type="text/javascript"></script>
+</body>
+
+</html>
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -62,9 +136,10 @@ func main() {
 	//将一些浏览器窗口/选项卡定位到http://localhost:8080并发送一些消息，
 	//请参见static/js/chat.js，
 	//请注意，客户端仅使用浏览器的本机WebSocket API，而不使用neffos
-
+	
 	// Target some browser windows/tabs to http://localhost:8080 and send some messages,
 	// see the static/js/chat.js,
 	// note that the client is using only the browser's native WebSocket API instead of the neffos one.
 	app.Run(iris.Addr(":8080"))
 }
+```

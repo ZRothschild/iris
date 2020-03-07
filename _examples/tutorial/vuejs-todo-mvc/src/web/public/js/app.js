@@ -1,3 +1,5 @@
+//完全符合规范的TodoMVC，具有约200条有效的JavaScript行中的iris和基于哈希的路由
+
 // Full spec-compliant TodoMVC with Iris
 // and hash-based routing in ~200 effective lines of JavaScript.
 
@@ -8,6 +10,8 @@ var ws;
     todos: {
       saved: function (ns, msg) {
         app.todos = msg.unmarshal()
+        //或进行新的http提取
+
         // or make a new http fetch
         // fetchTodos(function (items) {
         //   app.todos = msg.unmarshal()
@@ -51,6 +55,7 @@ var todoStorage = {
     });
   }
 }
+//可见性过滤器
 
 // visibility filters
 var filters = {
@@ -68,6 +73,7 @@ var filters = {
     })
   }
 }
+// app Vue实例
 
 // app Vue instance
 var app = new Vue({
@@ -78,10 +84,12 @@ var app = new Vue({
     editedTodo: null,
     visibility: 'all'
   },
-
+  // 我们不会使用"watch"，因为它可以与“ hasChanges”和回调之类的字段一起使用，以实现它的真实性，
+  // 但是让我们非常简单，因为这只是一个很小的入门
   // we will not use the "watch" as it works with the fields like "hasChanges"
-  // and callbacks to make it true but let's keep things very simple as it's just a small getting started. 
-  // // watch todos change for persistence
+  // and callbacks to make it true but let's keep things very simple as it's just a small getting started.
+
+  // //观看todos更改以保持持久性 |  watch todos change for persistence
   // watch: {
   //   todos: {
   //     handler: function (todos) {
@@ -95,7 +103,7 @@ var app = new Vue({
   //   }
   // },
 
-  // computed properties
+  // computed属性 | computed properties
   // http://vuejs.org/guide/computed.html
   computed: {
     filteredTodos: function () {
@@ -122,6 +130,8 @@ var app = new Vue({
       return n === 1 ? 'item' : 'items'
     }
   },
+  //实现数据逻辑的方法
+  //注意，这里根本没有DOM操作
 
   // methods that implement data logic.
   // note there's no DOM manipulation here at all.
@@ -135,7 +145,7 @@ var app = new Vue({
         return
       }
       this.todos.push({
-        id: this.todos.length + 1, // just for the client-side.
+        id: this.todos.length + 1, // //仅用于客户端 | just for the client-side.
         title: value,
         completed: false
       })
@@ -183,6 +193,7 @@ var app = new Vue({
       this.notifyChange();
     }
   },
+  //一个自定义指令，等待DOM更新后再关注输入字段
 
   // a custom directive to wait for the DOM to be updated
   // before focusing on the input field.
@@ -195,6 +206,7 @@ var app = new Vue({
     }
   }
 })
+//处理路由
 
 // handle routing
 function onHashChange() {

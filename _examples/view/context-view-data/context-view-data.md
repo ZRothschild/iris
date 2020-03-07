@@ -1,3 +1,40 @@
+# go iris 上下文视图数据
+## 目录结构
+> 主目录`context-view-data`
+```html
+    —— templates
+        —— layouts
+            —— layout.html
+        —— index.html
+    —— main.go
+```
+## 代码示例
+> `templates/layouts/layout.html`
+```html
+<html>
+<head>
+<title>My WebsiteLayout</title>
+
+</head>
+<body>
+	<!-- Render the current template here -->
+	{{ yield }}
+</body>
+</html>
+```
+> `templates/index.html`
+```html
+<h1>
+	Title: {{.Title}}
+</h1>
+<h3>{{.BodyMessage}} </h3>
+
+<hr/>
+
+Current time: {{.CurrentTime}}
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -65,3 +102,4 @@ func main() {
 // Notes: ViewData("", myCustomStruct{}) will set this myCustomStruct value as a root binding data,
 // so any View("other", "otherValue") will probably fail.
 // To clear the binding data: ctx.Set(ctx.Application().ConfigurationReadOnly().GetViewDataContextKey(), nil)
+```

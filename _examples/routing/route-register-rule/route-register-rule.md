@@ -7,8 +7,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import "github.com/kataras/iris/v12"
@@ -67,8 +66,7 @@ func anyHandler(ctx iris.Context) {
 ```
 
 > `main_test.go`
-
-```go
+```golang
 package main
 
 import (

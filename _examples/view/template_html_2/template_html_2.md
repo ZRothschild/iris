@@ -1,3 +1,65 @@
+# go iris 视图 html 模板第2个示例
+## 目录结构
+> 主目录`template_html_2`
+```html
+    —— templates
+        —— layouts
+            —— layout.html
+            —— mylayout.html
+        —— partials
+            —— page1_partial1.html
+        —— page1.html
+    —— main.go
+```
+## 代码示例
+> `templates/layouts/layout.html`
+```html
+<html>
+<head>
+<title>Layout</title>
+
+</head>
+<body>
+	<h1>This is the global layout</h1>
+	<br />
+	<!-- Render the current template here -->
+	{{ yield }}
+</body>
+</html>
+```
+> `templates/layouts/mylayout.html`
+```html
+<html>
+<head>
+<title>my Layout</title>
+
+</head>
+<body>
+	<h1>This is the layout for the /my/ and /my/other routes only</h1>
+	<br />
+	<!-- Render the current template here -->
+	{{ yield }}
+</body>
+</html>
+```
+> `templates/partials/page1_partial1.html`
+```html
+<div style="background-color: white; color: red">
+	<h1>Page 1's Partial 1</h1>
+</div>
+```
+> `templates/page1.html`
+```html
+<div style="background-color: black; color: blue">
+
+	<h1>Page 1 {{ greet "iris developer"}}</h1>
+
+	{{ render "partials/page1_partial1.html"}}
+
+</div>
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -51,3 +113,4 @@ func main() {
 	// http://localhost:8080/my/other
 	app.Run(iris.Addr(":8080"))
 }
+```

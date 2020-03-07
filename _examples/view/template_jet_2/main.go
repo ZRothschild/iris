@@ -1,3 +1,5 @@
+//main包一个主要示例，说明如何命名您的路线并使用自定义'url path' Jet模板引擎
+//
 // Package main an example on how to naming your routes & use the custom 'url path' Jet Template Engine.
 package main
 
@@ -48,6 +50,11 @@ func main() {
 		}
 
 		println("The path of " + routeName + "is: " + r.Path)
+		//如果routeName == "my-page1"
+		//打印：my-page1的路径是：/mypath
+		//如果是使用命名参数的路径
+		//然后使用"r.ResolvePath(paramValuesHere)"
+
 		// if routeName == "my-page1"
 		// prints: The path of of my-page1 is: /mypath
 		// if it's a path which takes named parameters

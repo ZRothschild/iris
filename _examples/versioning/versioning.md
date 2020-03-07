@@ -1,3 +1,13 @@
+# go iris API版本号定义
+
+## 目录结构
+> 主目录`versioning`
+```html
+    —— main.go
+```
+## 代码示例
+> `main.go`
+```go
 package main
 
 import (
@@ -15,7 +25,6 @@ func main() {
 	// Read the README.md before any action.
 	app.Run(iris.Addr(":8080"))
 }
-
 //如何测试：
 //打开Postman
 // GET: localhost:8080/api/cats
@@ -79,3 +88,4 @@ func catsVersionExactly1Handler(ctx iris.Context) {
 func catsV2Handler(ctx iris.Context) {
 	ctx.Writef("v2 resource: /api/cats handler")
 }
+```

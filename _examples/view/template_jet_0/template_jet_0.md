@@ -1,3 +1,76 @@
+# go iris 视图 jet 模板引擎第0个示例
+## 目录结构
+> 主目录`template_jet_0`
+```html
+    —— views
+        —— layouts
+            —— application.jet
+        —— todos
+            —— index.jet
+            —— show.jet
+    —— main.go
+```
+## 代码示例
+> `views/layouts/application.jet`
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ isset(title) ? title : "" }}</title>
+  </head>
+  <body>
+    {{block documentBody()}}{{end}}
+  </body>
+</html>
+```
+> `views/todos/index.jet`
+```html
+{{extends "layouts/application.jet"}}
+
+{{block button(label, href="javascript:void(0)")}}
+  <a href="{{ href }}">{{ label }}</a>
+{{end}}
+
+{{block ul()}}
+  <ul>
+    {{yield content}}
+  </ul>
+{{end}}
+
+{{block documentBody()}}
+  <h1>List of TODOs</h1>
+
+  {{if isset(showingAllDone) && showingAllDone}}
+    <p>Showing only TODOs that are done</p>
+  {{else}}
+    <p><a href="/all-done">Show only TODOs that are done</a></p>
+  {{end}}
+
+  {{yield ul() content}}
+    {{range id, value := .}}
+      <li {{if value.Done}}style="color:red;text-decoration: line-through;"{{end}}>
+        <a href="/todo?id={{ id }}">{{ value.Text }}</a>
+        {{yield button(label="UP", href="/update/?id="+base64(id))}} - {{yield button(href="/delete/?id="+id, label="DL")}}
+      </li>
+    {{end}}
+  {{end}}
+{{end}}
+```
+> `views/todos/show.jet`
+```html
+{{extends "layouts/application.jet"}}
+
+{{block documentBody()}}
+  <h1>Show TODO</h1>
+  <p>This uses a custom renderer by implementing the jet.Renderer (or view.JetRenderer) interface.
+  <p>
+    {{.}}
+  </p>
+{{end}}
+```
+> `main.go`
+```golang
 //包main展示了如何使用Iris内置的Jet视图引擎轻松使用jet模板解析器
 //此示例是https://github.com/CloudyKit/jet/tree/master/examples/todos的自定义分支，因此您可以并排注意到它们之间的差异
 //
@@ -38,7 +111,6 @@ func (dt *doneTODOs) New(todos map[string]*tTODO) *doneTODOs {
 	dt.list = todos
 	return dt
 }
-
 // Range满足jet.Ranger接口，即使列表中包含未完成的TODO，也仅返回已完成的TODO
 
 // Range satisfies the jet.Ranger interface and only returns TODOs that are done,
@@ -57,7 +129,6 @@ func (dt *doneTODOs) Range() (reflect.Value, reflect.Value, bool) {
 func (dt *doneTODOs) Render(r *view.JetRuntime) {
 	r.Write([]byte(fmt.Sprintf("custom renderer")))
 }
-
 //渲染实现jet.Renderer接口
 
 // Render implements jet.Renderer interface
@@ -148,7 +219,7 @@ func main() {
 		// ctx.ViewData("_jet", (&doneTODOs{}).New(todos))
 		//和ctx.View("todos/index.jet")
 		// 要么
-
+		
 		// Use ctx.ViewData("_jet", jetData)
 		// if using as middleware and you want
 		// to pre-set the value or even change it later on from another next middleware.
@@ -167,3 +238,4 @@ func main() {
 
 	app.Run(iris.Addr(port))
 }
+```

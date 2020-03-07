@@ -1,3 +1,28 @@
+# go iris 视图使用回顾
+## 目录结构
+> 主目录`overview`
+```html
+    —— templates
+        —— hi.html
+    —— main.go
+```
+## 代码示例
+> `templates/hi.html`
+```html
+<html>
+
+<head>
+	<title>Hi iris</title>
+</head>
+
+<body>
+	<h1>Hi {{.Name}} </h1>
+</body>
+
+</html>
+```
+> `main.go`
+```golang
 package main
 
 import "github.com/kataras/iris/v12"
@@ -19,9 +44,9 @@ func main() {
 		// ..templates/hi.html中的.Name
 		ctx.ViewData("Name", "iris") // the .Name inside the ./templates/hi.html
 		//为大文件启用gzip
-		ctx.Gzip(true) // enable gzip for big files
+		ctx.Gzip(true)               // enable gzip for big files
 		//使用相对于'./templates'的文件名渲染模板
-		ctx.View("hi.html") // render the template with the file name relative to the './templates'
+		ctx.View("hi.html")          // render the template with the file name relative to the './templates'
 	})
 
 	// http://localhost:8080/
@@ -42,3 +67,4 @@ access to the engines' variables can be granded by "github.com/kataras/iris/v12"
     iris.Handlebars(...) >> >>      view.Handlebars(...)
     iris.Amber(...)      >> >>      view.Amber(...)
 */
+```

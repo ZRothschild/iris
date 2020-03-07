@@ -1,3 +1,68 @@
+# go iris 将模板嵌入应用
+## 目录结构
+> 主目录`embedding-templates-into-app`
+```html
+    —— templates
+        —— layouts
+            —— layout.html
+            —— mylayout.html
+        —— partials
+            —— page1_partial1.html
+        —— page1.html
+    —— bindata.go
+    —— main.go
+```
+## 代码示例
+> `templates/layouts/layout.html`
+```html
+<html>
+<head>
+<title>Layout</title>
+
+</head>
+<body>
+	<h1>This is the global layout</h1>
+	<br />
+	<!-- 在此处渲染当前模板-->
+	<!-- Render the current template here -->
+	{{ yield }}
+</body>
+</html>
+```
+> `templates/layouts/mylayout.html`
+```html
+<html>
+<head>
+<title>my Layout</title>
+
+</head>
+<body>
+	<h1>This is the layout for the /my/ and /my/other routes only</h1>
+	<br />
+	<!-- 在此处渲染当前模板 -->
+	<!-- Render the current template here -->
+	{{ yield }}
+</body>
+</html>
+```
+> `templates/partials/page1_partial1.html`
+```html
+<div style="background-color: white; color: red">
+	<h1>Page 1's Partial 1</h1>
+</div>
+```
+> `templates/page1.html`
+```html
+<div style="background-color: black; color: blue">
+
+	<h1>Page 1 {{ greet "iris developer"}}</h1>
+
+	{{ render "partials/page1_partial1.html"}}
+
+</div>
+```
+> `bindata.go`
+```golang
 // go-bindata生成的代码
 //来源：
 // templates/layouts/layout.html
@@ -175,7 +240,6 @@ func Asset(name string) ([]byte, error) {
 	}
 	return nil, fmt.Errorf("Asset %s not found", name)
 }
-
 // MustAsset就像Asset一样，
 // 但是当Asset返回错误时会panics。它简化了全局变量的安全初始化
 
@@ -206,7 +270,6 @@ func AssetInfo(name string) (os.FileInfo, error) {
 	}
 	return nil, fmt.Errorf("AssetInfo %s not found", name)
 }
-
 // AssetNames返回静态资源的名称
 
 // AssetNames returns the names of the assets.
@@ -217,7 +280,6 @@ func AssetNames() []string {
 	}
 	return names
 }
-
 // _bindata是一个表，其中包含每个静态资源生成器，并映射到其名称
 
 // _bindata is a table, holding each asset generator, mapped to its name.
@@ -286,7 +348,6 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		}},
 	}},
 }}
-
 // RestoreAsset恢复给定目录下的静态资源
 
 // RestoreAsset restores an asset under the given directory
@@ -313,7 +374,6 @@ func RestoreAsset(dir, name string) error {
 	}
 	return nil
 }
-
 // RestoreAssets递归还原给定目录下的静态资源
 
 // RestoreAssets restores an asset under the given directory recursively
@@ -337,3 +397,80 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
+```
+> `main.go`
+```golang
+package main
+
+import (
+	"github.com/kataras/iris/v12"
+)
+
+func main() {
+	app := iris.New()
+
+	tmpl := iris.HTML("./templates", ".html")
+	tmpl.Layout("layouts/layout.html")
+	tmpl.AddFunc("greet", func(s string) string {
+		return "Greetings " + s + "!"
+	})
+
+	// $ go get -u github.com/go-bindata/go-bindata/...
+	// $ go-bindata ./templates/...
+	// $ go build
+	// $ ./embedding-templates-into-app
+
+	//不使用html文件，您可以删除文件夹并运行示例
+
+	// html files are not used, you can delete the folder and run the example.
+	tmpl.Binary(Asset, AssetNames) // <-- 重要 | IMPORTANT
+
+	app.RegisterView(tmpl)
+
+	app.Get("/", func(ctx iris.Context) {
+		if err := ctx.View("page1.html"); err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.Writef(err.Error())
+		}
+	})
+	//删除特定路由的布局
+
+	// remove the layout for a specific route
+	app.Get("/nolayout", func(ctx iris.Context) {
+		ctx.ViewLayout(iris.NoLayout)
+		if err := ctx.View("page1.html"); err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.Writef(err.Error())
+		}
+	})
+	//设置组路由的布局，.Layout应该在任何Get或其他Handle聚会方法之前
+
+	// set a layout for a party, .Layout should be BEFORE any Get or other Handle party's method
+	my := app.Party("/my").Layout("layouts/mylayout.html")
+	//这两个路由都将使用layouts/mylayout.html作为其布局
+	{ // both of these will use the layouts/mylayout.html as their layout.
+		my.Get("/", func(ctx iris.Context) {
+			ctx.View("page1.html")
+		})
+		my.Get("/other", func(ctx iris.Context) {
+			ctx.View("page1.html")
+		})
+	}
+
+	// http://localhost:8080
+	// http://localhost:8080/nolayout
+	// http://localhost:8080/my
+	// http://localhost:8080/my/other
+	app.Run(iris.Addr(":8080"))
+}
+
+//注意新的Gophers：
+//如示例注释所示，使用`go build`代替`go run main.go`
+//否则会出现编译错误，这是Go事情；
+//因为在package main中有多个文件
+
+// Note for new Gophers:
+// `go build` is used instead of `go run main.go` as the example comments says
+// otherwise you will get compile errors, this is a Go thing;
+// because you have multiple files in the `package main`.
+```

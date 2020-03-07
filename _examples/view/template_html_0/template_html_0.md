@@ -1,3 +1,25 @@
+# go iris 视图 html 模板第0个示例
+## 目录结构
+> 主目录`template_html_0.md`
+```html
+    —— templates
+        —— hi.html
+    —— main.go
+```
+## 代码示例
+> `templates/hi.html`
+```html
+<html>
+<head>
+<title>{{.Title}}</title>
+</head>
+<body>
+	<h1>Hi {{.Name}} </h1>
+</body>
+</html>
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -53,3 +75,4 @@ access to the engines' variables can be granded by "github.com/kataras/iris/v12"
     iris.Handlebars(...) >> >>      view.Handlebars(...)
     iris.Amber(...)      >> >>      view.Amber(...)
 */
+```

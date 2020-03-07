@@ -18,6 +18,10 @@ const (
 	dialAndConnectTimeout = 5 * time.Second
 )
 
+//可以与server.go共享
+//NSConn.Conn具有`IsClient() bool`方法，
+//可用于检查它是客户端还是服务器端回调
+
 // this can be shared with the server.go's.
 // `NSConn.Conn` has the `IsClient() bool` method which can be used to
 // check if that's is a client or a server-side callback.
@@ -82,4 +86,5 @@ func main() {
 
 		fmt.Fprint(os.Stdout, ">> ")
 	}
+	//尝试两次运行该程序，或者/并且运行服务器的http://localhost:8080来检查浏览器客户端
 } // try running this program twice or/and run the server's http://localhost:8080 to check the browser client as well.

@@ -1,3 +1,30 @@
+# go iris 视图写入io.Write
+## 目录结构
+> 主目录`write-to`
+```html
+    —— views
+        —— email
+            —— simple.html
+        —— shared
+            —— email.html
+    —— main.go
+```
+## 代码示例
+> `views/email/simple.html`
+```html
+{{.Body}}
+```
+> `views/shared/email.html`
+```html
+<h1>{{.Title}}</h1>
+<p class="body">
+    {{yield}}
+</p>
+
+<a href="{{.RefLink}}" target="_new">{{.RefTitle}}</a>
+```
+> `main.go`
+```golang
 package main
 
 import (
@@ -29,7 +56,7 @@ func main() {
 	// Or a string-buffered writer to use its body to send an e-mail
 	// for sending e-mails you can use the https://github.com/kataras/go-mailer
 	// or any other third-party package you like.
-
+	
 	//模板的解析结果将被写入该编写器
 	//
 	// The template's parsed result will be written to that writer.
@@ -46,3 +73,4 @@ func main() {
 
 	app.Run(iris.Addr(":8080"))
 }
+```

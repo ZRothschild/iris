@@ -1,2 +1,5 @@
+index.css并不是为了减少示例的磁盘空间
+而是使用https://unpkg.com/todomvc-app-css@2.0.4/index.css
+
 index.css is not here to reduce the disk space for the examples.
 https://unpkg.com/todomvc-app-css@2.0.4/index.css is used instead.

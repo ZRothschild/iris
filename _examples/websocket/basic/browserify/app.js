@@ -7,9 +7,14 @@ var wsURL = scheme + "://" + document.location.hostname + port + "/echo";
 
 const enableJWT = true;
 if (enableJWT) {
+  //这只是示例内容的签名和payload，
+  //请将其替换为您的逻辑。
+
   // This is just a signature and a payload of an example content, 
   // please replace this with your logic.
-  //
+
+  //在令牌前添加一个随机字母以使其无效，并确保不允许该客户端拨打Websocket服务器
+
   // Add a random letter in front of the token to make it
   // invalid and see that this client is not allowed to dial the websocket server.
   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjozMjEzMjF9.8waEX7-vPKACa-Soi1pQvW3Rl8QY-SUFcHKTLZI4mvU";
@@ -59,6 +64,11 @@ async function runExample() {
         }
       }
     });
+
+    //您可以等待连接，也可以只是conn.connect("connect")，
+    //然后将`handleNamespaceConnectedConn`放在`_OnNamespaceConnected`回调中
+    // const nsConn = await conn.connect("default");
+    // nsConn.emit(...); handleNamespaceConnectedConn(nsConn);
 
     // You can either wait to conenct or just conn.connect("connect")
     // and put the `handleNamespaceConnectedConn` inside `_OnNamespaceConnected` callback instead.
