@@ -1,4 +1,4 @@
-# `go iris caddy`使用示例2
+# `go iris caddy`使用示例二
 ## 目录结构
 > 主目录`server2`
 ```html
@@ -19,7 +19,7 @@ api.example.com {
 }
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (

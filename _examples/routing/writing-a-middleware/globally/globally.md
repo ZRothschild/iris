@@ -1,4 +1,4 @@
-# `route` 全局路由函数注册
+# IRIS全局路由函数注册
 ## 目录结构
 > 主目录`globally`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import "github.com/kataras/iris/v12"

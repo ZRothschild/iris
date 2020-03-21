@@ -1,4 +1,4 @@
-# `seesion`会话快速信息化存储
+# IRIS `seesion`会话快速信息化存储
 ## 目录结构
 > 主目录`flash-messages`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

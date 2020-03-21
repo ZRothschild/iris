@@ -1,4 +1,4 @@
-# `seesion`使用如何加密cookie
+# IRIS `seesion`会话加密cookie
 ## 目录结构
 > 主目录`securecookie`
 ```html
@@ -7,7 +7,7 @@
 ```
 ## 代码示例
 > `main.go`
-```go
+```golang
 package main
 
 //开发人员可以使用任何库来添加自定义cookie编码器/解码器(encoder/decoder.)
@@ -115,7 +115,7 @@ func main() {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (

@@ -1,4 +1,4 @@
-# 文章
+# ISIR DropzoneJS 文章 示例二
 * [如何使用DropzoneJS和Go构建文件上传表单](https://hackernoon.com/how-to-build-a-file-upload-form-using-dropzonejs-and-go-8fb9f258a991)
 * [如何使用DropzoneJS和Go在服务器上显示现有文件](https://hackernoon.com/how-to-display-existing-files-on-server-using-dropzonejs-and-go-53e24b57ba19)
 
@@ -34,7 +34,7 @@
 
 将以下内容复制到"main.go"。阅读评论以获取详细信息
 
-```go
+```golang
 // main.go
 
 package main

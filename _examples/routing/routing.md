@@ -1,4 +1,4 @@
-# `route`基础用法
+# IRIS路由基础用法
 ## 目录结构
 > 主目录`routing`
 ```html
@@ -7,8 +7,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (
@@ -224,7 +223,7 @@ func main() {
 
 > `main_test.go`
 
-```go
+```golang
 package main
 
 import (

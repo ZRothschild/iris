@@ -1,14 +1,12 @@
-# `seesion`会话
+# IRIS `seesion`会话 boltdb存储
 ## 目录结构
 > 主目录`boltdb`
 ```html
     —— main.go
-
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

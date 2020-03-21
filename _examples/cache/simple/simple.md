@@ -1,3 +1,12 @@
+# `iris`服务端缓存
+## 目录结构
+> 主目录`simple`
+```html
+    —— main.go
+```
+## 代码示例 
+> `main.go`
+```golang
 package main
 
 import (
@@ -91,5 +100,9 @@ func writeMarkdown(ctx iris.Context) {
 Note that `HandleDir` does use the browser's disk caching by-default
 therefore, register the cache handler AFTER any HandleDir calls,
 for a faster solution that server doesn't need to keep track of the response
-navigate to https://github.com/kataras/iris/blob/master/_examples/cache/client-side/main.go
+navigate to https://github.com/kataras/iris/blob/master/_examples/cache/client-side/main.go 
 */
+```
+## 提示
+1. 第一次访问，服务器会返回所有信息，当在缓存时间之内请求服务器，将得到最缓存的信息。过期以后将从新在服务生成。
+2. 适合于静态页面做缓存

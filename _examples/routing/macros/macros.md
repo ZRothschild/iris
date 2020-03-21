@@ -1,4 +1,4 @@
-# `route` 路由宏的使用
+# IRIS路由宏的使用
 ## 目录结构
 > 主目录`macros`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 // Package main展示了如何注册自定义参数类型和所属的宏函数。
 // Package main shows how you can register a custom parameter type and macro functions that belongs to it.
 package main

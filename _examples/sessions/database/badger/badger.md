@@ -1,4 +1,4 @@
-# `sessions` badger数据库存储会话
+# IRIS sessions badger数据库存储会话
 ## 目录结构
 > 主目录`badger`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

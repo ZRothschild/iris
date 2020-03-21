@@ -1,4 +1,4 @@
-# go iris 视图pug模板引擎第0个示例
+# go iris 视图 pug 模板第零示例
 ## 目录结构
 > 主目录`template_pug_0`
 ```html

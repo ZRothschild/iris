@@ -1,4 +1,4 @@
-# `route`路由状态设置
+# IRIS路由状态设置
 ## 目录结构
 > 主目录`route-state`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

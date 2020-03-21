@@ -1,4 +1,4 @@
-# `route`路由前后置处理程序设置
+# IRIS路由前后置处理程序设置
 ## 目录结构
 > 主目录`per-route`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import "github.com/kataras/iris/v12"

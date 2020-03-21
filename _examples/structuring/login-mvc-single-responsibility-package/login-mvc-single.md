@@ -1,4 +1,4 @@
-# iris 登录演示 (MVC 使用独立包组织)，mvc架构简单登录例子
+# IRIS MVC 架构 登录示例
 ## 目录结构
 > 主目录`login-mvc-single-responsibility-package`
 ```html
@@ -30,7 +30,6 @@
 form {
     border: 3px solid #f1f1f1;
 }
-
 /* Full-width inputs */
 input[type=text], input[type=password] {
     width: 100%;
@@ -40,7 +39,6 @@ input[type=text], input[type=password] {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-
 /* Set a style for all buttons */
 button {
     background-color: #4CAF50;
@@ -51,32 +49,26 @@ button {
     cursor: pointer;
     width: 100%;
 }
-
 /* Add a hover effect for buttons */
 button:hover {
     opacity: 0.8;
 }
-
 /* Extra style for the cancel button (red) */
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: #f44336;
 }
-
 /* Center the container */
-
 /* Add padding to containers */
 .container {
     padding: 16px;
 }
-
 /* The "Forgot password" text */
 span.psw {
     float: right;
     padding-top: 16px;
 }
-
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
     span.psw {
@@ -89,21 +81,19 @@ span.psw {
 }
 ```
 > `user/auth.go`
-```go
+```golang
 package user
 
 import (
 	"errors"
 	"strconv"
 	"strings"
-
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 )
 
 const sessionIDKey = "UserID"
-
 // paths 路径
 var (
 	PathLogin  = mvc.Response{Path: "/user/login"}
@@ -223,7 +213,7 @@ func (c *AuthController) logout() mvc.Response {
 }
 ```
 > `user/controller.go`
-```go
+```golang
 package user
 
 import (
@@ -474,7 +464,7 @@ func (c *Controller) GetBy(userID int64) mvc.Result {
 }
 ```
 > `user/datasource.go`
-```go
+```golang
 package user
 
 import (
@@ -594,7 +584,6 @@ func (d *DataSource) InsertOrUpdate(user Model) (Model, error) {
 		return user, err
 	}
 	user.HashedPassword = hashedPassword
-
 	// update
 	if id := user.ID; id > 0 {
 		_, found := d.GetByID(id)
@@ -606,7 +595,6 @@ func (d *DataSource) InsertOrUpdate(user Model) (Model, error) {
 		d.mu.Unlock()
 		return user, nil
 	}
-
 	// insert
 	id := d.getLastID() + 1
 	user.ID = id
@@ -619,7 +607,7 @@ func (d *DataSource) InsertOrUpdate(user Model) (Model, error) {
 }
 ```
 > `user/model.go`
-```go
+```golang
 package user
 
 import (
@@ -677,16 +665,13 @@ func ValidatePassword(userPassword string, hashed []byte) (bool, error) {
 > `views/shared/layout.html`
 ```html
 <html>
-
 <head>
     <title>{{.Title}}</title>
     <link rel="stylesheet" type="text/css" href="/public/css/site.css" />
 </head>
-
 <body>
     {{ yield }}
 </body>
-
 </html>
 ```
 > `views/user/login.html`
@@ -695,10 +680,8 @@ func ValidatePassword(userPassword string, hashed []byte) (bool, error) {
     <div class="container">
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" required>
-
         <label><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="password" required>
-
         <button type="submit">Login</button>
     </div>
 </form>
@@ -721,19 +704,16 @@ func ValidatePassword(userPassword string, hashed []byte) (bool, error) {
     <div class="container">
         <label><b>Firstname</b></label>
         <input type="text" placeholder="Enter Firstname" name="firstname" required>
-
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" required>
-
         <label><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="password" required>
-
         <button type="submit">Register</button>
     </div>
 </form>
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (
@@ -754,11 +734,8 @@ func main() {
 	// You got full debug messages, useful when using MVC and you want to make
 	// sure that your code is aligned with the Iris' MVC Architecture.
 	app.Logger().SetLevel("debug")
-
 	app.RegisterView(iris.HTML("./views", ".html").Layout("shared/layout.html"))
-
 	app.HandleDir("/public", "./public")
-
 	mvc.Configure(app, configureMVC)
 
 	// http://localhost:8080/user/register
@@ -774,7 +751,6 @@ func configureMVC(app *mvc.Application) {
 		Cookie:  "sessioncookiename",
 		Expires: 24 * time.Hour,
 	})
-
 	userApp := app.Party("/user")
 	userApp.Register(
 		user.NewDataSource(),

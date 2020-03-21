@@ -1,4 +1,4 @@
-# go iris websocket基本范例
+# go iris websocket 基本示例
 
 在本示例的最后，您将能够运行Websocket服务器和所有平台（Go，Browser和Nodejs）的客户端。
 

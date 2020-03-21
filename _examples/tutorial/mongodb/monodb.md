@@ -25,7 +25,7 @@
 
 ## 代码示例
 > `api/store/movie.go`
-```go
+```golang
 package storeapi
 
 import (
@@ -131,7 +131,7 @@ func (h *MovieHandler) Delete(ctx iris.Context) {
 }
 ```
 > `env/env.go`
-```go
+```golang
 package env
 
 import (
@@ -218,7 +218,7 @@ func getDefault(key string, def string) string {
 }
 ```
 > `httputil/error.go`
-```go
+```golang
 package httputil
 
 import (
@@ -369,7 +369,7 @@ func UnauthorizedJSON(ctx iris.Context, err error, format string, args ...interf
 }
 ```
 > `store/movie.go`
-```go
+```golang
 package store
 
 import (
@@ -567,7 +567,7 @@ PORT=8080
 DSN=localhost:27017
 ```
 > `main.go`
-```go
+```golang
 package main
 
 // go get -u go.mongodb.org/mongo-driver

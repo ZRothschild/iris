@@ -1,4 +1,4 @@
-# 单域名试用
+# IRIS 单域名
 ## 目录结构
 > 主目录`single`
 ```html
@@ -37,7 +37,7 @@
 #-END iris-
 ```
 > `main.go`
-```go
+```golang
 //打包主注册静态子域，如果使用Windows，请检查./hosts
 // Package main register static subdomains, simple as parties, check ./hosts if you use windows
 package main

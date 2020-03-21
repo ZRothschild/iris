@@ -1,14 +1,12 @@
-# `seesion`会话中间件
+# IRIS `seesion` 会话中间件
 ## 目录结构
 > 主目录`middleware`
 ```html
     —— main.go
-
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

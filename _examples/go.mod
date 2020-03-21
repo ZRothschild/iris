@@ -14,16 +14,16 @@ require (
 	github.com/iris-contrib/middleware/jwt v0.0.0-20191219204441-78279b78a367 // indirect
 	github.com/iris-contrib/pongo2-addons v0.0.1 // indirect
 	github.com/kataras/iris/v12 v12.1.8
-	github.com/klauspost/compress v1.10.1 // indirect
+	github.com/klauspost/compress v1.10.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/zserge/webview v0.0.0-20200301213939-0eb933f25974
 	go.mongodb.org/mongo-driver v1.3.0 // indirect
-	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d // indirect
-	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
-	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
-	gopkg.in/ini.v1 v1.52.0 // indirect
+	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073 // indirect
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
+	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
+	gopkg.in/ini.v1 v1.54.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 )

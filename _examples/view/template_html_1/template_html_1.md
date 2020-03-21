@@ -1,4 +1,4 @@
-# go iris 视图 html 模板第1个示例
+# go iris 视图 html 模板第一示例
 ## 目录结构
 > 主目录`template_html_1`
 ```html

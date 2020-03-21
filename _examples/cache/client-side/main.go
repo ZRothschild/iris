@@ -1,3 +1,7 @@
+// 包main展示了如何基于“ modtime”使用`WriteWithExpiration`
+// 如果它比请求标头新，它将刷新内容，否则将让客户端（浏览器的99.9％）处理缓存机制 ，
+// 它比iris.Cache更快，因为服务器端无需执行任何操作，也无需将响应存储在内存中
+//
 // Package main shows how you can use the `WriteWithExpiration`
 // based on the "modtime", if it's newer than the request header then
 // it will refresh the contents, otherwise will let the client (99.9% the browser)

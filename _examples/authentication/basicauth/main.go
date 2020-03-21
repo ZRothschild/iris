@@ -18,6 +18,11 @@ func newApp() *iris.Application {
 
 	authentication := basicauth.New(authConfig)
 
+	//全局app.Use(authentication)（或在.Run前的app.UseGlobal）进行路由
+	/*
+		app.Get("/mysecret", authentication, h)
+	*/
+
 	// to global app.Use(authentication) (or app.UseGlobal before the .Run)
 	// to routes
 	/*
@@ -25,6 +30,8 @@ func newApp() *iris.Application {
 	*/
 
 	app.Get("/", func(ctx iris.Context) { ctx.Redirect("/admin") })
+
+	// 路由组
 
 	// to party
 
@@ -50,6 +57,8 @@ func main() {
 
 func h(ctx iris.Context) {
 	username, password, _ := ctx.Request().BasicAuth()
+	//第三个参数将始终为true，因为中间件会确保做到这一点，否则将不执行该处理程序
+
 	// third parameter it will be always true because the middleware
 	// makes sure for that, otherwise this handler will not be executed.
 

@@ -1,4 +1,4 @@
-# go iris 上下文视图数据
+# go iris 上下文视图数据绑定
 ## 目录结构
 > 主目录`context-view-data`
 ```html

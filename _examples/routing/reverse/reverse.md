@@ -1,4 +1,4 @@
-# `route`路由转换
+# IRIS路由转换
 ## 目录结构
 > 主目录`reverse`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

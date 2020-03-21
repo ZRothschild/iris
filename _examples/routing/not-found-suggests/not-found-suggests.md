@@ -1,4 +1,4 @@
-# `route`路由路径未找到404推荐跳转
+# IRIS路由路径未找到404推荐跳转
 ## 目录结构
 > 主目录`not-found-suggests`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import "github.com/kataras/iris/v12"

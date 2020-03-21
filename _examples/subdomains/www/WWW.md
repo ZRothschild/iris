@@ -1,4 +1,4 @@
-# www域名使用
+# IRIS www 域名使用
 ## 目录结构
 > 主目录`WWW`
 ```html
@@ -36,7 +36,7 @@
 #-END iris-
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (
@@ -131,7 +131,7 @@ func info(ctx iris.Context) {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (

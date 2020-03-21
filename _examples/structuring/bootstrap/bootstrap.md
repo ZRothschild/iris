@@ -1,4 +1,4 @@
-# `bootstrap`引导模式架构，项目工程结构化
+# IRIS `bootstrap`引导模式架构
 ## 目录结构
 > 主目录`bootstrap.md`
 ```html
@@ -27,7 +27,7 @@
 ![目录结构图片](./folder_structure.png)
 ## 代码示例
 > `bootstrap/bootstrapper.go`
-```go
+```golang
 package bootstrap
 
 import (
@@ -165,7 +165,7 @@ func (b *Bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {
 }
 ```
 > `middleware/identity/identity.go`
-```go
+```golang
 package identity
 
 import (
@@ -209,7 +209,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 ![项目图标](./public/favicon.ico)
 
 > `routes/follower.go`
-```go
+```golang
 package routes
 
 import (
@@ -225,7 +225,7 @@ func GetFollowerHandler(ctx iris.Context) {
 }
 ```
 > `routes/following.go`
-```go
+```golang
 package routes
 
 import (
@@ -241,7 +241,7 @@ func GetFollowingHandler(ctx iris.Context) {
 }
 ```
 > `routes/index.go`
-```go
+```golang
 package routes
 
 import (
@@ -257,7 +257,7 @@ func GetIndexHandler(ctx iris.Context) {
 }
 ```
 > `routes/like.go`
-```go
+```golang
 package routes
 
 import (
@@ -273,7 +273,7 @@ func GetLikeHandler(ctx iris.Context) {
 }
 ```
 > `routes/routes.go`
-```go
+```golang
 package routes
 
 import (
@@ -329,7 +329,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 <h1>Welcome!!</h1>
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (
@@ -352,7 +352,7 @@ func main() {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (

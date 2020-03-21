@@ -1,4 +1,4 @@
-# go iris 视图jet模板引擎1示例（嵌入式）
+# go iris 视图 jet 模板第一示例（嵌入式）
 
 首先看一下 [../template_jet_0](../template_jet_0)的自述文件。
 

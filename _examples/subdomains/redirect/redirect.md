@@ -1,4 +1,4 @@
-# 域名重定向
+# IRIS 域名重定向
 ## 目录结构
 > 主目录`redirect`
 ```html
@@ -15,7 +15,7 @@
 # Windows: Drive:/Windows/system32/drivers/etc/hosts, on Linux: /etc/hosts
 ```
 > `main.go`
-```go
+```golang
 //包main显示了如何使用app.WWW方法注册一个简单的'www'子域，
 //该方法将注册一个路由器包装器，该包装器会将所有'mydomain.com'请求重定向到'www.mydomain.com'
 // “hosts”文件，以了解如何在本地计算机上测试“ mydomain.com”。
@@ -119,7 +119,7 @@ func getLogin(ctx iris.Context) {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (

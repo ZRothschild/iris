@@ -1,4 +1,4 @@
-# `route`路由试用概览
+# IRIS路由试用概览
 ## 目录结构
 > 主目录`overview`
 ```html
@@ -9,8 +9,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

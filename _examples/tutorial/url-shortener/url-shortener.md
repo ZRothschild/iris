@@ -1,4 +1,4 @@
-# 使用Go，Iris和Bolt的URL短链接生成程序服务
+# Go Iris 短链接生成
 
 Hackernoon文章 : https://medium.com/hackernoon/a-url-shortener-service-using-go-iris-and-bolt-4182f0b00ae7
 
@@ -47,7 +47,7 @@ body{
 </html>
 ```
 > `factory.go`
-```go
+```golang
 package main
 
 import (
@@ -115,7 +115,7 @@ func (f *Factory) Gen(uri string) (key string, err error) {
 }
 ```
 > `main.go`
-```go
+```golang
 // Package main展示了如何创建简单的URL Shortener。
 //
 //文章：https：//medium.com/@kataras/a-url-shortener-service-using-go-iris-and-bolt-4182f0b00ae7
@@ -263,7 +263,7 @@ func newApp(db *DB) *iris.Application {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (
@@ -342,7 +342,7 @@ func TestURLShortener(t *testing.T) {
 }
 ```
 > `store.go`
-```go
+```golang
 package main
 
 import (

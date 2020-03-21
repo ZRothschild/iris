@@ -1,14 +1,12 @@
-# `seesion`会话redis存储
+# IRIS `seesion` 会话redis存储
 ## 目录结构
 > 主目录`redis`
 ```html
     —— main.go
-
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

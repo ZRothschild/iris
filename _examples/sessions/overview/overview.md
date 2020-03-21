@@ -1,4 +1,4 @@
-# `seesion`的验证使用简要介绍
+# IRIS `seesion`会话使用简要介绍
 ## 目录结构
 > 主目录`overview`
 ```html
@@ -6,8 +6,7 @@
 ```
 ## 代码示例
 > `main.go`
-
-```go
+```golang
 package main
 
 import (

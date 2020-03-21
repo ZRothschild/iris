@@ -1,4 +1,4 @@
-# `route`路由注册规则
+# IRIS路由注册规则
 ## 目录结构
 > 主目录`route-register-rule`
 ```html

@@ -1,4 +1,4 @@
-# 教程使用Iris和Vue.js的Todo MVC应用程序
+# Iris和Vue Todo MVC应用
 ## 目录结构
 > 主目录`vue-todo-mvc`
 ```html

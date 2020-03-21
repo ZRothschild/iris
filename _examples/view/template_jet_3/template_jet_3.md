@@ -1,4 +1,4 @@
-# go iris 视图jet模板引擎第3个示例
+# go iris 视图 jet 模板第三示例
 ## 目录结构
 > 主目录`template_jet_3`
 ```html

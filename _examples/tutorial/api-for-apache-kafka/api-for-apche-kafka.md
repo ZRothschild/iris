@@ -1,4 +1,4 @@
-# 使用Iris为Apache Kafka编写API
+# IRIS Apache Kafka API
 ## 目录结构
 > 主目录`api-for-apache-kafka`
 ```html
@@ -7,7 +7,7 @@
 ```
 ## 代码示例
 > `main.go`
-```go
+```golang
 package main
 
 import (
@@ -445,7 +445,6 @@ func getTopicConsumeSSEHandler(ctx iris.Context) {
 - <https://medium.com/@kataras>
 - <https://dev.to/kataras>
 
-查看 [功能齐全的例子](src/main.go).
 
 ## 图片
 

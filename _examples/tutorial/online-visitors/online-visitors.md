@@ -1,4 +1,4 @@
-# `Iris`教程动态记录线上访客量
+# `Iris`动态记录线上访客量
 ## 目录结构
 > 主目录`online-visitors`
 ```html
@@ -101,7 +101,7 @@
 </html>
 ```
 > `main.go` 结合 js 看看就明白了
-```go
+```golang
 package main
 
 import (

@@ -1,4 +1,4 @@
-# `httptest`httpt测试试用
+# IRIS `httptest` http测试
 ## 目录结构
 > 主目录`httptest`
 ```html
@@ -7,7 +7,7 @@
 ```
 ## 代码示例
 > `main.go`
-```go
+```golang
 package main
 
 import (
@@ -59,7 +59,7 @@ func main() {
 }
 ```
 > `main_test.go`
-```go
+```golang
 package main
 
 import (

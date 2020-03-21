@@ -1,4 +1,4 @@
-# go iris 视图写入io.Write
+# go iris 视图写入`io.Write`
 ## 目录结构
 > 主目录`write-to`
 ```html

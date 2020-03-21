@@ -1,4 +1,4 @@
-# go iris 将模板嵌入应用
+# go iris 试图模板嵌入应用
 ## 目录结构
 > 主目录`embedding-templates-into-app`
 ```html

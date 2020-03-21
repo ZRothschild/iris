@@ -1,4 +1,4 @@
-# 文章
+# ISIR DropzoneJS 文章 示例一
 * [如何使用DropzoneJS和Go构建文件上传表单](https://hackernoon.com/how-to-build-a-file-upload-form-using-dropzonejs-and-go-8fb9f258a991)
 * [如何使用DropzoneJS和Go在服务器上显示现有文件](https://hackernoon.com/how-to-display-existing-files-on-server-using-dropzonejs-and-go-53e24b57ba19)
 
@@ -22,8 +22,7 @@
 4. 从这里下载dropzone.css从 [this URL](https://raw.githubusercontent.com/enyo/dropzone/master/dist/dropzone.css), 如果您想要一些已经制作好的CSS
 5. 创建一个文件夹"./public/uploads"，该文件夹用于存储上传的文件
 6. 创建一个文件"./views/upload.html"，该文件用于首页
-7. 创建一个文件"./main.go"，该文件用于处理后端文件上传过程
-准备之后，您的文件夹和文件结构应如下所示：
+7. 创建一个文件"./main.go"，该文件用于处理后端文件上传过程准备之后，您的文件夹和文件结构应如下所示：
 ![文件夹和文件结构](folder_structure.png)
 ## dropzone.js使用
 打开文件"./views/upload.html"，让我们创建一个DropzoneJs表单
@@ -63,7 +62,7 @@
 现在，您已经进入了教程的最后一部分。 在本节中，我们会将从DropzoneJS发送的文件存储到"./public/uploads"文件夹中。
 
 打开"main.go" 并复制以下代码：
-```go
+```golang
 // main.go
 
 package main

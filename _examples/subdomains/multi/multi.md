@@ -1,4 +1,4 @@
-# 多域名使用【子域名】
+# IRIS多域名【子域名】
 ## 目录结构
 > 主目录`multi`
 ```html
@@ -44,7 +44,7 @@
 #-END iris-
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (

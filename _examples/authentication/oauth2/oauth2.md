@@ -1,3 +1,30 @@
+# OAuth2.0认证授权
+## 认证授权过程
+- 服务提供方(provider)，用户使用服务提供方来存储受保护的资源，如照片，视频，联系人列表
+- 用户，存放在服务提供方的受保护的资源的拥有者
+- 客户端，要访问服务提供方资源的第三方应用，通常是网站，如提供照片打印服务的网站。在认证过程之前，客户端要向服务提供者申请客户端标识
+
+**使用OAuth进行认证和授权的过程如下所示:**
+> 用户想操作存放在服务提供方的资源。
+> 用户登录客户端向服务提供方请求一个临时令牌。
+> 服务提供方验证客户端的身份后，授予一个临时令牌。
+> 客户端获得临时令牌后，将用户引导至服务提供方的授权页面请求用户授权。在这个过程中将临时令牌和客户端的回调连接发送给服务提供方。
+> 用户在服务提供方的网页上输入用户名和密码，然后授权该客户端访问所请求的资源。
+> 授权成功后，服务提供方引导用户返回客户端的网页。
+> 客户端根据临时令牌从服务提供方那里获取访问令牌。
+> 服务提供方根据临时令牌和用户的授权情况授予客户端访问令牌。
+> 客户端使用获取的访问令牌访问存放在服务提供方上的受保护的资源。
+## 目录结构
+> 主目录`oauth2`
+```html
+    —— main.go
+    —— templates
+        —— index.html
+        —— user.html
+```
+## 代码示例
+> `main.go`
+```golang
 package main
 
 //任何OAuth2（甚至是纯golang/x/net/oauth2）包都可以与iris一起使用，但在此示例中，我们将看到markbates的goth：
@@ -467,7 +494,7 @@ func main() {
 
 	app.Get("/auth/{provider}", func(ctx iris.Context) {
 		//尝试在不重新认证的情况下获取用户
-
+		
 		// try to get the user without re-authenticating
 		if gothUser, err := CompleteUserAuth(ctx); err == nil {
 			ctx.ViewData("", gothUser)
@@ -495,3 +522,27 @@ type ProviderIndex struct {
 	Providers    []string
 	ProvidersMap map[string]string
 }
+```
+> `index.html`
+```html
+{{range $key,$value:=.Providers}}
+    <p><a href="/auth/{{$value}}">Log in with {{index $.ProvidersMap $value}}</a></p>
+{{end}}
+```
+> `user.html`
+```html
+<p><a href="/logout/{{.Provider}}">logout</a></p>
+<p>Name: {{.Name}} [{{.LastName}}, {{.FirstName}}]</p>
+<p>Email: {{.Email}}</p>
+<p>NickName: {{.NickName}}</p>
+<p>Location: {{.Location}}</p>
+<p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
+<p>Description: {{.Description}}</p>
+<p>UserID: {{.UserID}}</p>
+<p>AccessToken: {{.AccessToken}}</p>
+<p>ExpiresAt: {{.ExpiresAt}}</p>
+<p>RefreshToken: {{.RefreshToken}}</p>
+```
+### 提示
+1. 去Github设置第三方授权登录，设置回调路径，把key,secret填入上面代码指定位置
+2. 执行程序选择github 即可看到想要的效果

@@ -1,4 +1,4 @@
-# `route`动态匹配路由
+# IRIS路由动态匹配
 ## 目录结构
 > 主目录`dynamic-path`
 ```html
@@ -9,7 +9,7 @@
 ## 代码示例
 > `main.go`
 
-```go
+```golang
 package main
 
 import (
@@ -401,7 +401,7 @@ func main() {
 
 > `root-wildcard/main.go`
 
-```go
+```golang
 package main
 
 import (

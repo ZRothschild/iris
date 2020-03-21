@@ -439,7 +439,7 @@
 </html>
 ```
 > `client/hello_go111.go`
-```go
+```golang
 // +build js
 
 package main
@@ -474,7 +474,7 @@ WebAssembly.instantiateStreaming(fetch("hello.wasm"), go.importObject).then((res
 }).then(instance => go.run(instance));
 ```
 > `main.go`
-```go
+```golang
 package main
 
 import (
